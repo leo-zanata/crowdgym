@@ -23,9 +23,9 @@
             <div class="register-student">
                 <a href="{{ route('register') }}"><span>Criar uma Conta</span></a>
             </div>
-            {{--<div class="register-gym">
-                <a href="#"><span>Cadastre sua academia</span></a>
-            </div>--}}
+            <div class="register-gym">
+                <a href="{{ route('gym.register') }}"><span>Cadastre sua academia</span></a>
+            </div>
         </div>
     </main>
     {{-- Blade não tem include, mas pode usar @include --}}

@@ -1,0 +1,222 @@
+/*Configuração da div que possui todas as outras divs do forms*/
+.container{
+  margin-top: 2%;
+  background-color: #fff;
+  border-radius: 7px;
+  box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.4);
+  width: 650px;
+  height: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/*Configuração da DIV do forms*/
+.form-academia{
+  padding-top: 30px;
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/*Configuração da div do cabeçalho*/
+.form-header{
+  margin-bottom: 2rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+/*Configuração da div do titulo*/
+.title-main{
+  padding-bottom: 1rem;
+}
+
+/*Alteração do tamanho de estilo do titulo*/
+.title-main h1{
+  font-size: 2.9rem;
+  font-family: monospace;
+}
+.title-form h2{
+  font-size: 1.3rem;
+  margin-left: 10px;
+}
+
+/*Risco abaixo do titulo*/
+.form-header h2::after{
+  content: '';
+  display: block;
+  width: 10rem;
+  height: 0.3rem;
+  background-color: #F57419;
+  margin: 0 auto;
+  position: relative;
+  border-radius: 10px;
+}
+
+/*Customização do grupo dos inputs*/
+.input-group{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 0 40px 0 40px;
+  padding: 1rem 0;
+}
+
+/*Separando cada tela de input*/
+.input-box{
+ display: flex;
+ flex-direction: column;
+ margin-bottom: 1.1rem; 
+}
+
+/*Customização do input*/
+.input-box input{
+  margin: 0.6rem 0;
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 1px 1px 6px #0000001c;
+}
+
+/*Customização do input ao passar o mouse nele*/
+.input-box input:hover{
+  background-color: #eeeeee75;
+}
+
+/*Curstomização do input ao clicar nele*/
+.input-box input:focus-visible{
+  outline: 1px solid #F57419;
+}
+
+/*Customização do select*/
+.input-box select{
+  margin: 0.6rem 0;
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 1px 1px 6px #0000001c;
+}
+
+/*Customização do select ao passar o mouse nele*/
+.input-box select:hover{
+  background-color: #eeeeee75;
+}
+
+/*Curstomização do input ao clicar nele*/
+.input-box select:focus-visible{
+  outline: 1px solid #F57419;
+}
+
+/*Customização dos titulos dos inputs e do genero*/
+.input-box label,
+.days-title h6{
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #000000c0;
+}
+
+/*Customização dos texto dentro do input*/
+.input-box input::placeholder{
+  color: #000000be;
+}
+
+/*Customização do CEP para cobrir a parte direita da tela*/
+#cep-box{
+  margin-right: 100%;
+}
+
+/*Configuração do botão*/
+.register-button{
+  text-align: center;
+}
+
+.days-title{
+  margin-bottom: 1rem;
+}
+.days-inputs{
+  padding: 0 40px 30px 40px;
+}
+
+/*Estilização dos inputs do dia de funcionamento*/
+.days-group{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.62rem;
+  padding: 0 0.5rem;
+}
+
+/*Alinhando o input*/
+.days-input{
+  display: flex;
+  align-items: center;
+}
+
+/*Espaçamento entre as bolas e o texto*/
+.days-input input{
+  margin-right: 0.35rem;
+}
+
+/*Customização dos textos*/
+.days-input label{
+  font-size: 0.81rem;
+  font-weight: 600;
+  color: #000000c0;
+}
+
+/*Customização do botão*/
+.register-button input{
+  width: 200px;
+  border: none;
+  background-color: #F57419;
+  padding: 0.62rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.93rem;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+/*Altera a cor ao passar o mouse encima do botão*/
+.register-button input:hover{
+  background-color: #ff6a00;
+} 
+
+/* formatação do footer*/
+footer {
+  width: 100%;
+  color: var(--cor-bg);
+  position: relative;
+  bottom: 0;
+  
+}
+
+/*formata o texto do e o centraliza copyright*/
+#footer_copyright {
+  display: flex;
+  justify-content: center;
+  background-color: var(--cor-secundaria);
+  font-size: 0.9rem;
+  padding: 1.5rem;
+  font-weight: 100;
+}
+
+/*Configuração da Responsividade*/
+@media screen and (max-width: 700px) {
+  .form-academia{
+    display: flex ;
+    flex-direction: column;
+    width: 300px;
+  }
+  .conteiner{
+    margin-top: 2%;
+    background-color: #fff;
+    border-radius: 7px;
+    box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.4);
+    width: 300px;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+}
