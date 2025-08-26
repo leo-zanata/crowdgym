@@ -10,23 +10,18 @@
 
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     @yield('css-files')
+
     <link rel="icon" href="{{ asset('img/favicon.png') }}" type="image/png" sizes="32x32" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <link rel="stylesheet"
-        href="https://cdn.positus.global/production/resources/robbu/whatsapp-button/whatsapp-button.css">
     @yield('links')
 </head>
 
 <body>
 
-    @include('partials.header')
+    @include('partials.dashboard-header')
 
     <main>
         @yield('content')
-        <a id="robbu-whatsapp-button" target="_blank" href="https://api.whatsapp.com/send?phone=0">
-            <div class="rwb-tooltip">Fale conosco</div>
-            <img src="https://cdn.positus.global/production/resources/robbu/whatsapp-button/whatsapp-icon.svg">
-        </a>
     </main>
 
     @include('partials.footer')
@@ -44,7 +39,6 @@
             s0.parentNode.insertBefore(s1, s0);
         })();
     </script>
-
 </body>
 
 </html>

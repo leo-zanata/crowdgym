@@ -30,7 +30,17 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('/aluno/menu_inicial');
+            $user = Auth::user();
+
+            if ($user->type === 'admin') {
+                return redirect()->intended(route('dashboard.admin'));
+            } elseif ($user->type === 'manager') {
+                return redirect()->intended(route('dashboard.manager'));
+            } elseif ($user->type === 'employee') {
+                return redirect()->intended(route('dashboard.employee'));
+            }
+
+            return redirect()->intended(route('dashboard.member'));
         }
 
         return back()->withErrors([
@@ -68,7 +78,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('dashboard.aluno');
+        return redirect()->route('dashboard.member');
     }
 
     public function logout(Request $request)

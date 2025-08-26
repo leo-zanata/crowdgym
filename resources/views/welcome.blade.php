@@ -13,11 +13,8 @@
         </div>
     </div>
     <div class="buttons">
-        <div class="join-student">
+        <div class="join-member">
             <a href="{{ route('login') }}"><span>Entrar</span></a>
-        </div>
-        <div class="register-student">
-            <a href="{{ route('register') }}"><span>Criar uma Conta</span></a>
         </div>
         <div class="register-gym">
             <a href="{{ route('gym.register') }}"><span>Cadastre sua academia</span></a>

@@ -4,6 +4,7 @@ use App\Http\Controllers\GymController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,3 +20,10 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::get('/register-gym', [GymController::class, 'create'])->name('gym.register');
 Route::post('/register-gym', [GymController::class, 'store'])->name('gym.store');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard/admin', [DashboardController::class, 'showAdminDashboard'])->name('dashboard.admin');
+    Route::get('/dashboard/manager', [DashboardController::class, 'showManagerDashboard'])->name('dashboard.manager');
+    Route::get('/dashboard/member', [DashboardController::class, 'showMemberDashboard'])->name('dashboard.member');
+    Route::get('/dashboard/employee', [DashboardController::class, 'showEmployeeDashboard'])->name('dashboard.employee');
+});

@@ -1,100 +1,74 @@
-/*Padronizando os componentes*/
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
+.crowd {
+    margin-top: 2rem;
 }
 
-   main{
-    /*faz os conteudos ficarem centralizados no meio da tela*/
+.crowd h1 {
+    font-size: 120px;
+    font-family: monospace;
+}
+
+
+.buttons {
+    position: relative;
     display: flex;
     justify-content: center;
     text-align: center;
-    flex-direction: column;
-    width: 100%;
+    margin-top: 9rem;
+    margin-bottom: 7.5rem;
+}
+
+.buttons a {
+    display: block;
+    width: 400px;
+    height: 80px;
+    line-height: 75px;
+    font-size: 18px;
+    font-family: sans-serif;
+    text-decoration: none;
+    color: #333;
+    border: 2px solid #333;
+    letter-spacing: 2px;
+    text-align: center;
+    position: relative;
+    transition: all .35s;
+}
+
+.join-member {
+    margin-right: 70px;
+}
+
+
+.buttons a span {
+    z-index: 2;
+    margin-top: 50px;
+    size: 2rem;
+}
+
+.join-member a:after {
+    content: "";
+    top: 0;
+    left: 0;
+    width: 0;
     height: 100%;
-   }
-   
-    .crowd {
-        margin-top: 2rem;
-    }
+    background: #f57419;
+    transition: all .60s;
+}
 
-    .crowd h1{
-        font-size: 120px;
-        font-family: monospace;
-    }
+.register-member a:after {
+    position: absolute;
+    content: "";
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 100%;
+    background: #f57419;
+    transition: all .60s;
+}
 
-    
-    .buttons {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        text-align: center;
-        margin-top: 9rem;
-        margin-bottom: 7.5rem;
-    }
+.buttons a:hover {
+    color: #fff;
+}
 
-    .buttons a {
-        display: block;
-        width: 400px;
-        height: 80px;
-        line-height: 75px;
-        font-size: 18px;
-        font-family: sans-serif;
-        text-decoration: none;
-        color: #333;
-        border: 2px solid #333;
-        letter-spacing: 2px;
-        text-align: center;
-        position: relative;
-        transition: all .35s;    
-    }
-
-    .join-student{
-       margin-right: 70px;
-    }
-
-
-    .buttons a span {
-        z-index: 2;
-        margin-top: 50px;
-        size: 2rem;
-    }
-
-    .join-student a:after {
-        content: "";
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 100%;
-        background: #f57419;
-        transition: all .60s;
-    }
-    
-    .register-student a:after {
-        position: absolute;
-        content: "";
-        top: 0;
-        right: 0;
-        width: 0;
-        height: 100%;
-        background: #f57419;
-        transition: all .60s;
-    }
-
-    .buttons a:hover {
-        color: #fff;
-    }
-
-    .buttons a:hover:after {
-        width: 100%;
-    }
-
-#footer_copyright {
-    display: flex;
-    justify-content: center;
-    font-size: 0.9rem;
-    padding: 1.5rem;
-    font-weight: 100;
+.buttons a:hover:after {
+    width: 100%;
 }
