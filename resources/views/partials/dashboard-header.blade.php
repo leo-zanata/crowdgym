@@ -10,8 +10,8 @@
                         <a href="{{ route('gym.my') }}">Minhas Academias</a>
                         <a href="{{ route('gym.search') }}">Buscar Academias</a>
                         <a href="{{ route('payment.data') }}">Dados de Pagamento</a>
-                        <a href="{{ route('about') }}">Sobre Nós</a>
-                        <a href="{{ route('support') }}">Ajuda e Suporte</a>
+                        <a target="_blank" href="{{ route('about') }}">Sobre Nós</a>
+                        <a target="_blank" href="{{ route('helpcenter.index') }}">Central de Ajuda</a>
                         <a href="{{ route('logout') }}">Sair</a>
                     </div>
                 </li>

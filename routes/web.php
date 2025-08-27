@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\HelpCenterController;
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\MyGymController;
 use App\Http\Controllers\GymSearchController;
@@ -39,3 +41,9 @@ Route::get('/plans/{gym_id}', [GymSearchController::class, 'showPlans'])->name('
 Route::get('/my-gyms', [MyGymController::class, 'index'])->name('gym.my');
 
 Route::get('/payment-data', [SubscriptionController::class, 'index'])->name('payment.data');
+
+Route::get('/about', [AboutController::class, 'index'])->name('about');
+
+Route::get('/helpcenter', [HelpCenterController::class, 'index'])->name('helpcenter.index');
+Route::get('/helpcenter/ticket', [HelpCenterController::class, 'showTicketForm'])->name('helpcenter.ticket.create');
+Route::post('/helpcenter/ticket', [HelpCenterController::class, 'storeTicket'])->name('helpcenter.ticket.store');
