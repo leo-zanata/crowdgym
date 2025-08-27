@@ -37,4 +37,5 @@ Route::get('/dashboard/member/gym-search', [GymSearchController::class, 'index']
 Route::get('/plans/{gym_id}', [GymSearchController::class, 'showPlans'])->name('plans.show');
 
 Route::get('/my-gyms', [MyGymController::class, 'index'])->name('gym.my');
-Route::post('/subscriptions/cancel/{id}', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
+
+Route::get('/payment-data', [SubscriptionController::class, 'index'])->name('payment.data');

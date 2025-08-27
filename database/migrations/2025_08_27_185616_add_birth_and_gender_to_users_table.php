@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('plans', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->date('birth')->nullable()->after('cpf');
+            $table->enum('gender', ['feminino', 'masculino', 'outro'])->nullable()->after('birth');
         });
     }
 
@@ -22,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('plans');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn(['birth', 'gender']);
+        });
     }
 };
