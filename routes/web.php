@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\MyGymController;
 use App\Http\Controllers\GymSearchController;
 use App\Http\Controllers\GymController;
 use App\Http\Controllers\HomeController;
@@ -33,3 +35,6 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/dashboard/member/gym-search', [GymSearchController::class, 'index'])->name('gym.search');
 Route::get('/plans/{gym_id}', [GymSearchController::class, 'showPlans'])->name('plans.show');
+
+Route::get('/my-gyms', [MyGymController::class, 'index'])->name('gym.my');
+Route::post('/subscriptions/cancel/{id}', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
