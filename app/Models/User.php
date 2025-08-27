@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Cashier\Billable;
+use App\Models\Subscription;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -47,5 +49,21 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function hasActiveSubscriptionForGym($gymId)
+    {
+        return $this->subscriptions()
+            ->whereHas('plan', function ($query) use ($gymId) {
+                $query->where('gym_id', $gymId);
+            })
+            ->where('stripe_status', 'active')
+            ->where('ends_at', '>=', Carbon::now())
+            ->exists();
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
     }
 }
