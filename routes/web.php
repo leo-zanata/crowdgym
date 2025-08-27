@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GymSearchController;
 use App\Http\Controllers\GymController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
@@ -21,9 +22,14 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/register-gym', [GymController::class, 'create'])->name('gym.register');
 Route::post('/register-gym', [GymController::class, 'store'])->name('gym.store');
 
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard/admin', [DashboardController::class, 'showAdminDashboard'])->name('dashboard.admin');
     Route::get('/dashboard/manager', [DashboardController::class, 'showManagerDashboard'])->name('dashboard.manager');
     Route::get('/dashboard/member', [DashboardController::class, 'showMemberDashboard'])->name('dashboard.member');
     Route::get('/dashboard/employee', [DashboardController::class, 'showEmployeeDashboard'])->name('dashboard.employee');
 });
+
+Route::get('/dashboard/member/gym-search', [GymSearchController::class, 'index'])->name('gym.search');
+Route::get('/plans/{gym_id}', [GymSearchController::class, 'showPlans'])->name('plans.show');
