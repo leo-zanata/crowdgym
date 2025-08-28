@@ -14,13 +14,15 @@
                 @foreach ($subscriptions as $subscription)
                     <div class="academia">
                         <h3>{{ $subscription->plan->gym->gym_name }}</h3>
-                        <p>Status: {{ $subscription->status }}</p>
-                        <p>Data de término: {{ \Carbon\Carbon::parse($subscription->end_date)->format('d/m/Y') }}</p>
+                        <p>Status: {{ $subscription->stripe_status }}</p>
+                        <p>Data de término: {{ \Carbon\Carbon::parse($subscription->ends_at)->format('d/m/Y') }}</p>
                         <p>Alunos treinando agora: <strong>{{ $subscription->total_treinando }}</strong></p>
-                        @if ($subscription->status === 'active')
+                        @if ($subscription->stripe_status === 'active')
                             <form action="{{ route('subscription.cancel', ['id' => $subscription->id]) }}" method="post">
                                 @csrf
-                                <button type="submit" onclick="return confirm('Tem certeza que deseja cancelar esta assinatura?')">Cancelar Assinatura</button>
+                                <button type="submit"
+                                    onclick="return confirm('Tem certeza que deseja cancelar esta assinatura?')">Cancelar
+                                    Assinatura</button>
                             </form>
                         @endif
                     </div>

@@ -12,7 +12,7 @@
                         <a href="{{ route('payment.data') }}">Dados de Pagamento</a>
                         <a target="_blank" href="{{ route('about') }}">Sobre Nós</a>
                         <a target="_blank" href="{{ route('helpcenter.index') }}">Central de Ajuda</a>
-                        <a href="{{ route('logout') }}">Sair</a>
+                        <a href="{{ route('home') }}">Sair</a>
                     </div>
                 </li>
             </ul>

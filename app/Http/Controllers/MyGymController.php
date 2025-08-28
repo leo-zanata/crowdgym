@@ -16,8 +16,8 @@ class MyGymController extends Controller
 
         $subscriptions = Subscription::with('plan.gym')
             ->where('user_id', $memberId)
-            ->where('status', 'active')
-            ->where('end_date', '>=', Carbon::now())
+            ->where('stripe_status', 'active')
+            ->where('ends_at', '>=', Carbon::now())
             ->get();
 
         $subscriptions->each(function ($subscription) {
