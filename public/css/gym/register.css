@@ -1,4 +1,4 @@
-.container{
+.container {
   margin-top: 2%;
   background-color: #fff;
   border-radius: 7px;
@@ -9,14 +9,8 @@
   margin-right: auto;
 }
 
-.form-academia{
-  padding-top: 30px;
-  width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
 
-.form-header{
+.form-header {
   margin-bottom: 2rem;
   flex-direction: column;
   justify-content: center;
@@ -24,20 +18,25 @@
   display: flex;
 }
 
-.title-main{
+.form-header img {
+  width: 120px;
+}
+
+.title-main {
   padding-bottom: 1rem;
 }
 
-.title-main h1{
+.title-main h1 {
   font-size: 2.9rem;
   font-family: monospace;
 }
-.title-form h2{
+
+.title-form h2 {
   font-size: 1.3rem;
   margin-left: 10px;
 }
 
-.form-header h2::after{
+.form-header h2::after {
   content: '';
   display: block;
   width: 10rem;
@@ -48,7 +47,7 @@
   border-radius: 10px;
 }
 
-.input-group{
+.input-group {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -56,13 +55,13 @@
   padding: 1rem 0;
 }
 
-.input-box{
- display: flex;
- flex-direction: column;
- margin-bottom: 1.1rem; 
+.input-box {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.1rem;
 }
 
-.input-box input{
+.input-box input {
   margin: 0.6rem 0;
   padding: 0.8rem 1.2rem;
   border: none;
@@ -70,15 +69,15 @@
   box-shadow: 1px 1px 6px #0000001c;
 }
 
-.input-box input:hover{
+.input-box input:hover {
   background-color: #eeeeee75;
 }
 
-.input-box input:focus-visible{
+.input-box input:focus-visible {
   outline: 1px solid #F57419;
 }
 
-.input-box select{
+.input-box select {
   margin: 0.6rem 0;
   padding: 0.8rem 1.2rem;
   border: none;
@@ -86,63 +85,64 @@
   box-shadow: 1px 1px 6px #0000001c;
 }
 
-.input-box select:hover{
+.input-box select:hover {
   background-color: #eeeeee75;
 }
 
-.input-box select:focus-visible{
+.input-box select:focus-visible {
   outline: 1px solid #F57419;
 }
 
 .input-box label,
-.days-title h6{
+.days-title h6 {
   font-size: 0.75rem;
   font-weight: 600;
   color: #000000c0;
 }
 
-.input-box input::placeholder{
+.input-box input::placeholder {
   color: #000000be;
 }
 
-#cep-box{
+#cep-box {
   margin-right: 100%;
 }
 
-.register-button{
+.register-button {
   text-align: center;
 }
 
-.days-title{
+.days-title {
   margin-bottom: 1rem;
 }
-.days-inputs{
+
+.days-inputs {
   padding: 0 40px 30px 40px;
 }
 
-.days-group{
+.days-group {
   display: flex;
   justify-content: space-between;
   margin-top: 0.62rem;
   padding: 0 0.5rem;
 }
 
-.days-input{
+.days-input {
   display: flex;
   align-items: center;
 }
 
-.days-input input{
+.days-input input {
   margin-right: 0.35rem;
 }
 
-.days-input label{
+.days-input label {
   font-size: 0.81rem;
   font-weight: 600;
   color: #000000c0;
 }
 
-.register-button input{
+.register-button input {
   width: 200px;
   border: none;
   background-color: #F57419;
@@ -154,17 +154,18 @@
   margin-bottom: 10px;
 }
 
-.register-button input:hover{
+.register-button input:hover {
   background-color: #ff6a00;
-} 
+}
 
 @media screen and (max-width: 700px) {
-  .form-academia{
-    display: flex ;
+  .form-academia {
+    display: flex;
     flex-direction: column;
     width: 300px;
   }
-  .conteiner{
+
+  .conteiner {
     margin-top: 2%;
     background-color: #fff;
     border-radius: 7px;

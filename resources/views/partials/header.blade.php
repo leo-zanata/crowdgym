@@ -8,8 +8,8 @@
 
         <nav class="nav-buttons">
             <a href="" class="header-buttons">Academias Parceiras</a>
-            <a href="" class="header-buttons">Seja um parceiro</a>
-            <a href="" class="header-buttons">Área Crowd </a>
+            <a href="{{ route('gym.register') }}" class="header-buttons">Seja um parceiro</a>
+            <a href="{{ route('dashboard.member') }}" class="header-buttons">Área Crowd </a>
 
             <div id="searchBar" class="search-bar">
                 <input type="text" id="searchInput" placeholder="Buscar Academia" autocomplete="off" />

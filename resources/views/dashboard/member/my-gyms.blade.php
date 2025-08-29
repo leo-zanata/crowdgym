@@ -7,7 +7,6 @@
 @endsection
 
 @section('content')
-    <main>
         @if ($subscriptions->isNotEmpty())
             <h2>Minhas Academias</h2>
             <ul>
@@ -33,5 +32,4 @@
             <p>Você ainda não possui assinaturas de academias no momento.</p>
             <a href="{{ route('gym.search') }}">Clique aqui para buscar uma academia</a>
         @endif
-    </main>
 @endsection

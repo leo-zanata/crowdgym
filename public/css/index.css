@@ -7,6 +7,8 @@
 
 :root {
     --laranja: #F07F0B;
+    --cinza-claro: #F1F3F4;
+    --branco: #FFFFFF;
 }
 
 body {
@@ -126,6 +128,11 @@ nav li a:hover {
     padding: 5px;
 }
 
+.search-icon:hover {
+    transform: scale(1.2);
+    color: var(--laranja);
+}
+
 .search-bar.active {
     display: block;
 }
@@ -191,7 +198,7 @@ nav li a:hover {
 }
 
 .profile-options {
-    background-color: var(--cinza-claro);
+    background-color: var(--branco);
     position: absolute;
     top: 120px;
     right: 20px;
