@@ -8,7 +8,6 @@
 
 @section('content')
     <header class="navbar">
-        @include('partials.header')
         <div class="nav-central">
             <h1>Como podemos ajudar?</h1>
             <div class="search-bar">

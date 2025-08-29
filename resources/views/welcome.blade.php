@@ -7,17 +7,5 @@
 @endsection
 
 @section('content')
-    <div class="header">
-        <div class="crowd">
-            <h1>Crowd Gym</h1>
-        </div>
-    </div>
-    <div class="buttons">
-        <div class="join-member">
-            <a href="{{ route('login') }}"><span>Entrar</span></a>
-        </div>
-        <div class="register-gym">
-            <a href="{{ route('gym.register') }}"><span>Cadastre sua academia</span></a>
-        </div>
-    </div>
+    
 @endsection

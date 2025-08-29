@@ -17,6 +17,10 @@
     flex-direction: column;
   }
 
+  .form-header img{
+    width: 120px;
+  }
+
   .title{
     padding-bottom: 1rem;
   }
