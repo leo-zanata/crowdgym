@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Gym;
+use App\Models\SupportTicket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -56,10 +58,10 @@ class DashboardController extends Controller
 
     public function showAdminDashboard()
     {
-        $pendingGyms = DB::table('gyms')
-            ->where('status', 'pending')
-            ->get();
+        $pendingGyms = Gym::where('status', 'pending')->get();
 
-        return view('dashboard.admin', compact('pendingGyms'));
+        $openTickets = SupportTicket::where('status', 'open')->get();
+
+        return view('dashboard.admin', compact('pendingGyms', 'openTickets'));
     }
 }

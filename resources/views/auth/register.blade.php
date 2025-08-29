@@ -62,7 +62,7 @@
 
         <div class="input-box">
           <label for="password">Senha*</label>
-          <input type="password" name="password" placeholder="Digite a senha" maxlength="15" id="password" required />
+          <input type="password" name="password" placeholder="Digite a senha" maxlength="24" id="password" required />
           @error('password')
             <span style="color: red;">{{ $message }}</span>
           @enderror
