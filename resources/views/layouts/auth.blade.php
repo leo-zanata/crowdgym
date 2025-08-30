@@ -32,8 +32,8 @@
     @include('partials.footer')
 
     @yield('js-files')
-
     <script src="{{ asset('js/index.js') }}"></script>
+    <script src="{{ asset('js/auth/app.js') }}"></script>
 </body>
 
 </html>

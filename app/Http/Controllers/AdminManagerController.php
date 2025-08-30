@@ -10,10 +10,18 @@ use Illuminate\Validation\Rule;
 
 class AdminManagerController extends Controller
 {
-    public function create()
+    public function create(Request $request)
     {
         $gyms = Gym::where('status', 'approved')->get();
-        return view('dashboard.admin.managers.create', compact('gyms'));
+
+        $prefilledData = [
+            'gym_id' => $request->query('gym_id'),
+            'name' => $request->query('name'),
+            'email' => $request->query('email'),
+            'cpf' => $request->query('cpf'),
+        ];
+
+        return view('dashboard.admin.managers.create', compact('gyms', 'prefilledData'));
     }
 
     public function store(Request $request)

@@ -25,7 +25,9 @@ class User extends Authenticatable
         'password',
         'cpf',
         'birth',
-        'gender'
+        'gender',
+        'type',
+        'gym_id',
     ];
 
     /**

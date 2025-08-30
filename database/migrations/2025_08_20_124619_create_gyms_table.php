@@ -14,8 +14,8 @@ return new class extends Migration
             $table->string('manager_name', 100);
             $table->string('gym_phone', 20);
             $table->string('manager_phone', 20);
-            $table->string('email', 255)->unique();
-            $table->string('cpf', 11)->unique();
+            $table->string('manager_email', 255)->unique();
+            $table->string('manager_cpf', 11)->unique();
             $table->string('zip_code', 8);
             $table->string('state', 2);
             $table->string('city', 100);

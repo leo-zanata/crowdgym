@@ -14,17 +14,18 @@
 
         <form action="{{ route('admin.managers.store') }}" method="POST">
             @csrf
-            
+
             <div class="input-group">
                 <div class="input-box">
                     <label for="name">Nome Completo*</label>
-                    <input type="text" name="name" id="name" required value="{{ old('name') }}">
+                    <input type="text" name="name" id="name" required value="{{ old('name', $prefilledData['name']) }}">
                     @error('name') <span class="text-red-500">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="input-box">
                     <label for="email">E-mail*</label>
-                    <input type="email" name="email" id="email" required value="{{ old('email') }}">
+                    <input type="email" name="email" id="email" required
+                        value="{{ old('email', $prefilledData['email']) }}">
                     @error('email') <span class="text-red-500">{{ $message }}</span> @enderror
                 </div>
 
@@ -41,7 +42,7 @@
 
                 <div class="input-box">
                     <label for="cpf">CPF*</label>
-                    <input type="text" name="cpf" id="cpf" required value="{{ old('cpf') }}">
+                    <input type="text" name="cpf" maxlength="11" id="cpf" oninput="formatOnlyNumbers(this)" required value="{{ old('cpf', $prefilledData['cpf']) }}">
                     @error('cpf') <span class="text-red-500">{{ $message }}</span> @enderror
                 </div>
 
@@ -67,7 +68,8 @@
                     <select name="gym_id" id="gym_id" required>
                         <option value="">-- Selecione uma academia --</option>
                         @foreach ($gyms as $gym)
-                            <option value="{{ $gym->id }}" {{ old('gym_id') == $gym->id ? 'selected' : '' }}>{{ $gym->gym_name }}</option>
+                            <option value="{{ $gym->id }}" {{ old('gym_id') == $gym->id ? 'selected' : '' }}>{{ $gym->gym_name }}
+                            </option>
                         @endforeach
                     </select>
                     @error('gym_id') <span class="text-red-500">{{ $message }}</span> @enderror
@@ -77,4 +79,7 @@
             <button type="submit">Cadastrar Gerente</button>
         </form>
     </main>
+@endsection
+@section('js-files')
+    <script src="{{ asset('js/utils.js') }}"></script>
 @endsection
