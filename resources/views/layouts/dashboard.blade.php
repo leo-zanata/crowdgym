@@ -17,8 +17,19 @@
 </head>
 
 <body>
-
-    @include('partials.dashboard-header')
+    @auth
+        @if (Auth::user()->type === 'admin')
+            @include('partials.admin.header')
+        @elseif (Auth::user()->type === 'manager')
+            @include('partials.manager.header')
+        @elseif (Auth::user()->type === 'employee')
+            @include('partials.employee.header')
+        @elseif (Auth::user()->type === 'member')
+            @include('partials.member.header')
+        @endif
+    @else
+        @include('partials.header')
+    @endauth
 
     <main>
         @yield('content')

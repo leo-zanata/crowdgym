@@ -7,21 +7,9 @@
         </div>
 
         <nav class="nav-buttons">
-            <a href="" class="header-buttons">Academias Parceiras</a>
-            <a href="{{ route('gym.register') }}" class="header-buttons">Seja um parceiro</a>
-            @auth
-                @if (Auth::user()->type === 'admin')
-                    <a href="{{ route('dashboard.admin') }}" class="header-buttons">Área Crowd</a>
-                @elseif (Auth::user()->type === 'manager')
-                    <a href="{{ route('dashboard.manager') }}" class="header-buttons">Área Crowd</a>
-                @elseif (Auth::user()->type === 'member')
-                    <a href="{{ route('dashboard.member') }}" class="header-buttons">Área Crowd</a>
-                @elseif (Auth::user()->type === 'employee')
-                    <a href="{{ route('dashboard.employee') }}" class="header-buttons">Área Crowd</a>
-                @endif
-            @else
-                <a href="{{ route('login') }}" class="header-buttons">Área Crowd</a>
-            @endauth
+            <a href="{{ route('dashboard.admin') }}" class="header-buttons">Dashboard</a>
+            <a href="{{ route('admin.gyms.create') }}" class="header-buttons">Cadastro de Academias</a>
+            <a href="{{ route('admin.managers.create') }}" class="header-buttons">Cadastro de Gerentes</a>
 
             <div id="searchBar" class="search-bar">
                 <input type="text" id="searchInput" placeholder="Buscar Academia" autocomplete="off" />

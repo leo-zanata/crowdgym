@@ -16,16 +16,8 @@
             <div class="summary-card">
                 <h2>Tickets de Suporte Abertos</h2>
                 <p>Você tem {{ $openTickets->count() }} tickets de suporte em aberto.</p>
-                <a href="{{ route('admin.tickets.open') }}">Ver Tickets</a>
+                <a href="">Ver Tickets</a>
             </div>
-        </section>
-
-        <section class="admin-actions">
-            <h2>Ações Rápidas</h2>
-            <ul>
-                <li><a href="{{ route('admin.gyms.create') }}">Cadastrar Nova Academia</a></li>
-                <li><a href="{{ route('admin.managers.create') }}">Cadastrar Novo Gerente</a></li>
-            </ul>
         </section>
     </main>
 @endsection

@@ -10,6 +10,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminGymController;
+use App\Http\Controllers\AdminManagerController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -33,6 +35,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/manager', [DashboardController::class, 'showManagerDashboard'])->name('dashboard.manager');
     Route::get('/dashboard/member', [DashboardController::class, 'showMemberDashboard'])->name('dashboard.member');
     Route::get('/dashboard/employee', [DashboardController::class, 'showEmployeeDashboard'])->name('dashboard.employee');
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/gyms/create', [AdminGymController::class, 'create'])->name('admin.gyms.create');
+    Route::post('/admin/gyms', [AdminGymController::class, 'store'])->name('admin.gyms.store');
+    Route::get('/admin/gyms/pending', [AdminGymController::class, 'pending'])->name('admin.gyms.pending');
+    Route::get('/admin/managers/create', [AdminManagerController::class, 'create'])->name('admin.managers.create');
+    Route::post('/admin/managers', [AdminManagerController::class, 'store'])->name('admin.managers.store');
 });
 
 Route::get('/dashboard/member/gym-search', [GymSearchController::class, 'index'])->name('gym.search');
