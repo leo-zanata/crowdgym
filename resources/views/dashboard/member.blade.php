@@ -30,6 +30,5 @@
 @endsection
 
 @section('js-files')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ asset('js/charts/hours_of_exercise_per_week.js') }}"></script>
 @endsection

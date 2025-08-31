@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminGymController;
 use App\Http\Controllers\AdminManagerController;
+use App\Http\Controllers\ManagerController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -45,6 +46,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/gyms/{gym}/reject', [AdminGymController::class, 'reject'])->name('admin.gyms.reject');
     Route::get('/admin/managers/create', [AdminManagerController::class, 'create'])->name('admin.managers.create');
     Route::post('/admin/managers', [AdminManagerController::class, 'store'])->name('admin.managers.store');
+});
+
+Route::middleware(['auth', 'role:manager'])->group(function () {
+    Route::get('/dashboard/manager', [DashboardController::class, 'showManagerDashboard'])->name('dashboard.manager');
+    Route::get('/manager/employees/create', [ManagerController::class, 'createEmployee'])->name('manager.employees.create');
+    Route::get('/manager/plans', [ManagerController::class, 'indexPlans'])->name('manager.plans.index');
+    Route::get('/manager/members', [ManagerController::class, 'indexMembers'])->name('manager.members.index');
 });
 
 Route::get('/dashboard/member/gym-search', [GymSearchController::class, 'index'])->name('gym.search');
