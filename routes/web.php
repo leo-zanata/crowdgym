@@ -50,9 +50,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/dashboard/manager', [DashboardController::class, 'showManagerDashboard'])->name('dashboard.manager');
-    Route::get('/manager/employees/create', [ManagerController::class, 'createEmployee'])->name('manager.employees.create');
-    Route::get('/manager/plans', [ManagerController::class, 'indexPlans'])->name('manager.plans.index');
-    Route::get('/manager/members', [ManagerController::class, 'indexMembers'])->name('manager.members.index');
+    Route::get('/manager/employees/create', [ManagerController::class, 'create'])->name('manager.employees.create');
+    Route::post('/manager/employees', [ManagerController::class, 'store'])->name('manager.employees.store');
+    Route::get('/manager/reports/financial', [ManagerController::class, 'indexFinancialReport'])->name('manager.reports.financial');
+    Route::get('/manager/members/communicate', [ManagerController::class, 'showCommunicationForm'])->name('manager.members.communicate');
+    Route::post('/manager/members/send', [ManagerController::class, 'sendCommunication'])->name('manager.members.send');
 });
 
 Route::get('/dashboard/member/gym-search', [GymSearchController::class, 'index'])->name('gym.search');

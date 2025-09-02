@@ -39,6 +39,7 @@ class DashboardController extends Controller
     public function showManagerDashboard()
     {
         $manager = Auth::user();
+        
         if (!$manager->gym_id) {
             return redirect()->route('home')->with('error', 'Sua conta não está associada a uma academia.');
         }
@@ -48,76 +49,74 @@ class DashboardController extends Controller
         $studentsInGym = CheckInOut::where('gym_id', $gymId)
             ->whereNull('check_out')
             ->count();
-
         $recentEnrollments = Subscription::whereHas('plan', function ($query) use ($gymId) {
             $query->where('gym_id', $gymId);
         })
-            ->with('user')
-            ->orderBy('created_at', 'desc')
-            ->limit(5)
-            ->get();
+        ->with('user')
+        ->orderBy('created_at', 'desc')
+        ->limit(5)
+        ->get();
+        $expiringSubscriptions = Subscription::whereHas('plan', function ($query) use ($gymId) {
+            $query->where('gym_id', $gymId);
+        })
+        ->with('user')
+        ->where('stripe_status', 'active')
+        ->where('ends_at', '>=', Carbon::now())
+        ->where('ends_at', '<=', Carbon::now()->addDays(30))
+        ->orderBy('ends_at', 'asc')
+        ->get();
 
         $dailyFlowData = CheckInOut::select(
             DB::raw('DATE(check_in) as date'),
             DB::raw('COUNT(DISTINCT user_id) as total_students')
         )
-            ->where('gym_id', $gymId)
-            ->where('check_in', '>=', Carbon::now()->subDays(7))
-            ->groupBy('date')
-            ->orderBy('date', 'asc')
-            ->get();
-
-        $expiringSubscriptions = Subscription::whereHas('plan', function ($query) use ($gymId) {
-            $query->where('gym_id', $gymId);
-        })
-            ->with('user')
-            ->where('stripe_status', 'active')
-            ->where('ends_at', '>=', Carbon::now())
-            ->where('ends_at', '<=', Carbon::now()->addDays(30))
-            ->orderBy('ends_at', 'asc')
-            ->get();
+        ->where('gym_id', $gymId)
+        ->where('check_in', '>=', Carbon::now()->subDays(7))
+        ->groupBy('date')
+        ->orderBy('date', 'asc')
+        ->get();
 
         $enrollmentAndChurnData = Subscription::select(
             DB::raw('DATE(created_at) as date'),
             DB::raw('COUNT(*) as total_enrollments'),
             DB::raw('SUM(CASE WHEN stripe_status = "canceled" THEN 1 ELSE 0 END) as total_churn')
         )
-            ->whereHas('plan', function ($query) use ($gymId) {
-                $query->where('gym_id', $gymId);
-            })
-            ->where('created_at', '>=', Carbon::now()->subMonths(6))
-            ->groupBy('date')
-            ->orderBy('date', 'asc')
-            ->get();
+        ->whereHas('plan', function ($query) use ($gymId) {
+            $query->where('gym_id', $gymId);
+        })
+        ->where('created_at', '>=', Carbon::now()->subMonths(6))
+        ->groupBy('date')
+        ->orderBy('date', 'asc')
+        ->get();
 
         $monthlyRevenue = Subscription::select(
             DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
             DB::raw('SUM(paid_amount) as total_revenue')
         )
-            ->whereHas('plan', function ($query) use ($gymId) {
-                $query->where('gym_id', $gymId);
-            })
-            ->where('created_at', '>=', Carbon::now()->subMonths(6))
-            ->where('paid_amount', '>', 0)
-            ->groupBy('month')
-            ->orderBy('month', 'asc')
-            ->get();
+        ->whereHas('plan', function ($query) use ($gymId) {
+            $query->where('gym_id', $gymId);
+        })
+        ->where('created_at', '>=', Carbon::now()->subMonths(6))
+        ->where('paid_amount', '>', 0)
+        ->groupBy('month')
+        ->orderBy('month', 'asc')
+        ->get();
 
         $peakHoursData = CheckInOut::select(
             DB::raw('HOUR(check_in) as hour'),
             DB::raw('COUNT(*) as total_students')
         )
-            ->where('gym_id', $gymId)
-            ->where('check_in', '>=', Carbon::now()->subDays(7))
-            ->groupBy('hour')
-            ->orderBy('hour', 'asc')
-            ->get();
+        ->where('gym_id', $gymId)
+        ->where('check_in', '>=', Carbon::now()->subDays(7))
+        ->groupBy('hour')
+        ->orderBy('hour', 'asc')
+        ->get();
 
         $pendingPayments = Subscription::whereHas('plan', function ($query) use ($gymId) {
             $query->where('gym_id', $gymId);
         })
-            ->where('stripe_status', 'pending_payment')
-            ->count();
+        ->where('stripe_status', 'pending_payment')
+        ->count();
 
         $topEmployees = User::select('users.name', DB::raw('COUNT(subscriptions.id) as total_sales'))
             ->join('subscriptions', 'subscriptions.employee_id', '=', 'users.id')
@@ -127,7 +126,7 @@ class DashboardController extends Controller
             ->orderBy('total_sales', 'desc')
             ->limit(3)
             ->get();
-
+            
         $gym = Gym::find($gymId);
         $maxCapacity = $gym->max_capacity ?? 1;
         $occupancyRate = ($studentsInGym / $maxCapacity) * 100;
@@ -136,6 +135,7 @@ class DashboardController extends Controller
             'studentsInGym',
             'recentEnrollments',
             'expiringSubscriptions',
+            'dailyFlowData',
             'enrollmentAndChurnData',
             'monthlyRevenue',
             'peakHoursData',

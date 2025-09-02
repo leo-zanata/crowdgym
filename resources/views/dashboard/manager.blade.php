@@ -21,10 +21,13 @@
                 <ul>
                     @forelse ($recentEnrollments as $subscription)
                         <li>
-                            <p><strong>{{ $subscription->user->name }}</strong> - {{ $subscription->created_at->format('d/m/Y') }}</p>
+                            <p><strong>{{ $subscription->user->name }}</strong> -
+                                {{ $subscription->created_at->format('d/m/Y') }}</p>
                         </li>
                     @empty
-                        <li><p>Nenhuma matrícula recente.</p></li>
+                        <li>
+                            <p>Nenhuma matrícula recente.</p>
+                        </li>
                     @endforelse
                 </ul>
             </div>
@@ -35,10 +38,13 @@
                 <ul>
                     @forelse ($expiringSubscriptions as $subscription)
                         <li>
-                            <p><strong>{{ $subscription->user->name }}</strong> - {{ $subscription->ends_at->format('d/m/Y') }}</p>
+                            <p><strong>{{ $subscription->user->name }}</strong> - {{ $subscription->ends_at->format('d/m/Y') }}
+                            </p>
                         </li>
                     @empty
-                        <li><p>Nenhuma assinatura próxima ao vencimento.</p></li>
+                        <li>
+                            <p>Nenhuma assinatura próxima ao vencimento.</p>
+                        </li>
                     @endforelse
                 </ul>
             </div>
@@ -47,7 +53,7 @@
                 <i class="bi bi-credit-card-2-back-fill"></i>
                 <h3>Pagamentos Pendentes:</h3>
                 <p><strong>{{ $pendingPayments }}</strong></p>
-                <a href="{{ route('manager.payments.pending') }}">Ver Pendências</a>
+                <a href="#">Ver Pendências</a>
             </div>
 
             <div class="card">
@@ -59,7 +65,9 @@
                             <p><strong>{{ $employee->name }}</strong> - {{ $employee->total_sales }} Matrículas</p>
                         </li>
                     @empty
-                        <li><p>Nenhum funcionário encontrado.</p></li>
+                        <li>
+                            <p>Nenhum funcionário encontrado.</p>
+                        </li>
                     @endforelse
                 </ul>
             </div>
@@ -87,9 +95,6 @@
                 <canvas id="flowPeakChart" aria-label="Gráfico de Pico de Horário por Dia"></canvas>
             </div>
             <div class="chart-container">
-                <canvas id="flowOccupancyChart" aria-label="Gráfico de Taxa de Ocupação"></canvas>
-            </div>
-            <div class="chart-container">
                 <canvas id="flowEnrollmentChart" aria-label="Gráfico de Novas Matrículas vs. Cancelamentos"></canvas>
             </div>
             <div class="chart-container">
@@ -112,7 +117,7 @@
                     <i class="bi bi-person-lines-fill"></i>
                     Comunicar com Membros
                 </a>
-                <a href="{{ route('manager.tickets.index') }}" class="action-button">
+                <a href="#" class="action-button">
                     <i class="bi bi-ticket-detailed"></i>
                     Tickets de Suporte
                 </a>
