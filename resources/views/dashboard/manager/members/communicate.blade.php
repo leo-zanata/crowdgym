@@ -17,29 +17,32 @@
                 {{ session('error') }}
             </div>
         @endif
-        
+
         @if ($errors->has('_token'))
             <div class="alert alert-danger">
                 {{ $errors->first('_token') }}
             </div>
         @endif
-        
-        <form action="{{ route('manager.members.send') }}" method="POST">
+
+        <form id="communicationForm" action="{{ route('manager.members.send') }}" method="POST">
             @csrf
-            
+
             <div class="input-box">
                 <label for="subject">Assunto*</label>
                 <input type="text" name="subject" id="subject" required value="{{ old('subject') }}">
                 @error('subject') <span class="text-red-500">{{ $message }}</span> @enderror
             </div>
-            
+
             <div class="input-box">
                 <label for="message">Mensagem*</label>
                 <textarea name="message" id="message" rows="5" required>{{ old('message') }}</textarea>
                 @error('message') <span class="text-red-500">{{ $message }}</span> @enderror
             </div>
-            
-            <button type="submit">Enviar Mensagem</button>
+
+            <button type="submit" id="submitButton">Enviar Mensagem</button>
         </form>
     </div>
+@endsection
+@section('js-files')
+    <script src="{{ asset('js/disable-submit-button.js') }}"></script>
 @endsection
