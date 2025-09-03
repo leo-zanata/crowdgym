@@ -60,18 +60,21 @@
           @enderror
         </div>
 
-        <div class="input-box">
+        <div class="input-box password-box">
           <label for="password">Senha*</label>
           <input type="password" name="password" placeholder="Digite a senha" maxlength="24" id="password" required />
+          <i class="eye-icon" data-target="password"></i>
           @error('password')
             <span style="color: red;">{{ $message }}</span>
           @enderror
+          <div id="passwordStrength" class="password-strength"></div>
         </div>
 
-        <div class="input-box">
+        <div class="input-box password-box">
           <label for="password_confirmation">Confirme a Senha*</label>
           <input type="password" name="password_confirmation" placeholder="Digite a senha novamente" maxlength="15"
             id="password_confirmation" required />
+          <i class="eye-icon" data-target="password_confirmation"></i>
         </div>
 
         <div class="gender-inputs">
@@ -102,4 +105,7 @@
       </div>
     </form>
   </div>
+@endsection
+@section('js-files')
+  <script src="{{ asset('js/utils.js') }}"></script>
 @endsection

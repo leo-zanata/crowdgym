@@ -25,9 +25,10 @@
                 <input type="text" name="email" placeholder="Digite o email" maxlength="255" id="email" required
                     value="{{ old('email') }}" />
             </div>
-            <div class="input-box">
+            <div class="input-box password-box">
                 <label for="password">Senha*</label>
                 <input type="password" name="password" placeholder="Digite a senha" maxlength="24" id="password" required />
+                <i class="eye-icon" data-target="password"></i>
             </div>
             <div>
                 <div class="forgot-password-group">
@@ -37,7 +38,7 @@
                         @endif
                     </div>
                     <div class="forgot-password">
-                        <a href="recover_password.php">Esqueci minha senha</a>
+                        <a href="{{ route('password.request') }}">Esqueci minha senha</a>
                     </div>
                 </div>
             </div>
@@ -47,4 +48,7 @@
             <a href="{{ route('register') }}">Criar Conta</a>
         </div>
     </form>
+@endsection
+@section('js-files')
+    <script src="{{ asset('js/utils.js') }}"></script>
 @endsection

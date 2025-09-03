@@ -1,5 +1,5 @@
 <footer>
     <div id="footer_copyright">
-        &#169 2025 CROWD GYM FROM ZOLTEX
+        <p>&copy; {{ date('Y') }} Crowd Gym. Todos os direitos reservados.</p>
     </div>
 </footer>

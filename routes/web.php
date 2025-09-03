@@ -13,6 +13,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminGymController;
 use App\Http\Controllers\AdminManagerController;
 use App\Http\Controllers\ManagerController;
+use App\Http\Controllers\PasswordResetController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -69,3 +70,10 @@ Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/helpcenter', [HelpCenterController::class, 'index'])->name('helpcenter.index');
 Route::get('/helpcenter/ticket', [HelpCenterController::class, 'showTicketForm'])->name('helpcenter.ticket.create');
 Route::post('/helpcenter/ticket', [HelpCenterController::class, 'storeTicket'])->name('helpcenter.ticket.store');
+
+Route::get('/forgot-password', [PasswordResetController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/forgot-password/verify', [PasswordResetController::class, 'showVerificationForm'])->name('password.verify');
+Route::post('/forgot-password/verify', [PasswordResetController::class, 'verifyCode'])->name('password.verify.post');
+Route::get('/forgot-password/reset', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
+Route::post('/forgot-password/reset', [PasswordResetController::class, 'resetPassword'])->name('password.reset.post');
