@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use App\Models\Plan;
 
 class ManagerController extends Controller
 {
@@ -175,5 +176,122 @@ class ManagerController extends Controller
         }
 
         return redirect()->back()->with('success', 'Mensagem enviada para todos os membros da academia!');
+    }
+
+    public function indexPlans()
+    {
+        $manager = Auth::user();
+        if (!$manager) {
+            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar esta página.');
+        }
+
+        $plans = Plan::where('gym_id', $manager->gym_id)->get();
+        return view('dashboard.manager.plans.index', compact('plans'));
+    }
+
+    public function createPlans()
+    {
+        $manager = Auth::user();
+        if (!$manager) {
+            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar esta página.');
+        }
+        return view('dashboard.manager.plans.create');
+    }
+
+    public function storePlans(Request $request)
+    {
+        $manager = Auth::user();
+        if (!$manager) {
+            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar esta página.');
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'description' => 'nullable|string',
+            'type' => 'required|in:principal,additional',
+            'duration' => 'required_if:type,principal|integer|min:1',
+            'duration_unit' => ['required_if:type,principal', Rule::in(['day', 'month'])],
+            'loyalty_months' => 'nullable|integer|min:0',
+            'installment_options' => 'nullable|array',
+            'installment_options.*' => 'integer|min:2|max:12',
+        ]);
+
+        Plan::create([
+            'name' => $request->name,
+            'price' => $request->price,
+            'description' => $request->description,
+            'duration' => $request->duration,
+            'duration_unit' => $request->duration_unit,
+            'loyalty_months' => $request->loyalty_months,
+            'installment_options' => $request->installment_options,
+            'type' => $request->type,
+            'gym_id' => $manager->gym_id,
+        ]);
+
+        return redirect()->route('manager.plans.index')->with('success', 'Plano criado com sucesso!');
+    }
+
+    public function editPlans(Plan $plan)
+    {
+        $manager = Auth::user();
+        if (!$manager) {
+            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar esta página.');
+        }
+        if ($plan->gym_id !== $manager->gym_id) {
+            return redirect()->route('manager.plans.index')->with('error', 'Você não tem permissão para editar este plano.');
+        }
+        return view('dashboard.manager.plans.edit', compact('plan'));
+    }
+
+    public function updatePlans(Request $request, Plan $plan)
+    {
+        $manager = Auth::user();
+        if (!$manager) {
+            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar esta página.');
+        }
+        if ($plan->gym_id !== $manager->gym_id) {
+            return redirect()->route('manager.plans.index')->with('error', 'Você não tem permissão para editar este plano.');
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'description' => 'nullable|string',
+            'type' => 'required|in:principal,additional',
+            'duration' => 'required_if:type,principal|integer|min:1',
+            'duration_unit' => ['required_if:type,principal', Rule::in(['day', 'month'])],
+            'loyalty_months' => 'nullable|integer|min:0',
+            'installment_options' => 'nullable|array',
+            'installment_options.*' => 'integer|min:1|max:12',
+        ]);
+
+        $plan->update([
+            'name' => $request->name,
+            'price' => $request->price,
+            'description' => $request->description,
+            'duration' => $request->duration,
+            'duration_unit' => $request->duration_unit,
+            'loyalty_months' => $request->loyalty_months,
+            'installment_options' => $request->installment_options,
+            'type' => $request->type,
+        ]);
+
+        return redirect()->route('manager.plans.index')->with('success', 'Plano atualizado com sucesso!');
+    }
+
+    public function destroyPlans(Plan $plan)
+    {
+        $manager = Auth::user();
+        if (!$manager) {
+            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar esta página.');
+        }
+        if ($plan->gym_id !== $manager->gym_id) {
+            return redirect()->route('manager.plans.index')->with('error', 'Você não tem permissão para remover este plano.');
+        }
+
+        $plan->delete();
+
+        return redirect()->route('manager.plans.index')->with('success', 'Plano removido com sucesso!');
     }
 }

@@ -9,8 +9,8 @@
         <nav class="nav-buttons">
             <a href="{{ route('dashboard.manager') }}" class="header-buttons">Dashboard</a>
             <a href="" class="header-buttons">Funcionários</a>
-            <a href="" class="header-buttons">Alunos</a>
-            <a href="" class="header-buttons">Planos</a>
+            <a href="{{ route('manager.members.index') }}" class="header-buttons">Alunos</a>
+            <a href="{{ route('manager.plans.index') }}" class="header-buttons">Planos</a>
 
             <div id="searchBar" class="search-bar">
                 <input type="text" id="searchInput" placeholder="Buscar " autocomplete="off" />

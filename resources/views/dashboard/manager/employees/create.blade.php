@@ -28,20 +28,25 @@
                     @error('email') <span class="text-red-500">{{ $message }}</span> @enderror
                 </div>
 
-                <div class="input-box">
+                <div class="input-box password-box">
                     <label for="password">Senha*</label>
-                    <input type="password" name="password" id="password" required>
+                    <input type="password" name="password" placeholder="Digite a senha" maxlength="24" id="password"
+                        required />
                     @error('password') <span class="text-red-500">{{ $message }}</span> @enderror
+                    <i class="eye-icon" data-target="password"></i>
                 </div>
 
-                <div class="input-box">
-                    <label for="password_confirmation">Confirmar Senha*</label>
-                    <input type="password" name="password_confirmation" id="password_confirmation" required>
+                <div class="input-box password-box">
+                    <label for="password_confirmation">Confirme a Senha*</label>
+                    <input type="password" name="password_confirmation" placeholder="Digite a senha novamente"
+                        maxlength="15" id="password_confirmation" required />
+                    <i class="eye-icon" data-target="password_confirmation"></i>
                 </div>
 
                 <div class="input-box">
                     <label for="cpf">CPF*</label>
-                    <input type="text" name="cpf" id="cpf" required value="{{ old('cpf') }}">
+                    <input type="text" id="cpf" name="cpf" maxlength="11" placeholder="Digite o cpf" required
+                        value="{{ old('cpf') }}" oninput="formatOnlyNumbers(this)" />
                     @error('cpf') <span class="text-red-500">{{ $message }}</span> @enderror
                 </div>
 
