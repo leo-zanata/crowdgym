@@ -10,6 +10,8 @@ use Laravel\Sanctum\HasApiTokens;
 use Laravel\Cashier\Billable;
 use App\Models\Subscription;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -68,8 +70,18 @@ class User extends Authenticatable
     {
         return $this->hasMany(Subscription::class);
     }
+    public function subscription(): HasOne
+    {
+        return $this->hasOne(Subscription::class);
+    }
+
     public function gym()
     {
         return $this->belongsTo(Gym::class);
+    }
+
+    public function supportTickets(): HasMany
+    {
+        return $this->hasMany(SupportTicket::class);
     }
 }

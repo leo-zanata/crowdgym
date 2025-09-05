@@ -8,6 +8,7 @@
 
         <nav class="nav-buttons">
             <a href="{{ route('dashboard.manager') }}" class="header-buttons">Dashboard</a>
+            <a href="{{ route('manager.tickets.index') }}" class="header-buttons">Tickets</a>
             <a href="" class="header-buttons">Funcionários</a>
             <a href="{{ route('manager.members.index') }}" class="header-buttons">Alunos</a>
             <a href="{{ route('manager.plans.index') }}" class="header-buttons">Planos</a>

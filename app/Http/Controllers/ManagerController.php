@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use App\Models\Plan;
+use App\Models\SupportTicket;
+use App\Models\TicketReply;
 
 class ManagerController extends Controller
 {
@@ -293,5 +295,95 @@ class ManagerController extends Controller
         $plan->delete();
 
         return redirect()->route('manager.plans.index')->with('success', 'Plano removido com sucesso!');
+    }
+
+    public function indexMembers()
+    {
+        $manager = Auth::user();
+        if (!$manager) {
+            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar esta página.');
+        }
+
+        $members = User::where('gym_id', $manager->gym_id)
+            ->where('type', 'member')
+            ->with('subscription.plan')
+            ->get();
+
+        return view('dashboard.manager.members.index', compact('members'));
+    }
+
+    public function indexTickets()
+    {
+        $manager = Auth::user();
+        if (!$manager) {
+            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar esta página.');
+        }
+
+        $tickets = SupportTicket::where('gym_id', $manager->gym_id)
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('dashboard.manager.tickets.index', compact('tickets'));
+    }
+
+    public function showTicket(SupportTicket $ticket)
+    {
+        $manager = Auth::user();
+        if (!$manager) {
+            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar esta página.');
+        }
+
+        if ($ticket->gym_id !== $manager->gym_id) {
+            return redirect()->route('manager.tickets.index')->with('error', 'Você não tem permissão para visualizar este ticket.');
+        }
+
+        $ticket->load('user', 'replies.user');
+        return view('dashboard.manager.tickets.show', compact('ticket'));
+    }
+
+    public function storeTicketReply(Request $request, SupportTicket $ticket)
+    {
+        $manager = Auth::user();
+        if (!$manager) {
+            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar esta página.');
+        }
+
+        if ($ticket->gym_id !== $manager->gym_id) {
+            return redirect()->route('manager.tickets.index')->with('error', 'Você não tem permissão para responder a este ticket.');
+        }
+
+        $request->validate([
+            'message' => 'required|string|min:1',
+        ]);
+
+        TicketReply::create([
+            'ticket_id' => $ticket->id,
+            'user_id' => $manager->id,
+            'message' => $request->message,
+        ]);
+
+        if ($ticket->status === 'open') {
+            $ticket->status = 'in_progress';
+            $ticket->save();
+        }
+
+        return redirect()->back()->with('success', 'Resposta enviada com sucesso!');
+    }
+    public function resolveTicket(SupportTicket $ticket)
+    {
+        $manager = Auth::user();
+        if (!$manager) {
+            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar esta página.');
+        }
+
+        if ($ticket->gym_id !== $manager->gym_id) {
+            return redirect()->route('manager.tickets.index')->with('error', 'Você não tem permissão para gerenciar este ticket.');
+        }
+
+        $ticket->status = 'resolved';
+        $ticket->save();
+
+        return redirect()->back()->with('success', 'Ticket marcado como resolvido!');
     }
 }

@@ -65,6 +65,11 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::delete('/manager/plans/{plan}', [ManagerController::class, 'destroyPlans'])->name('manager.plans.destroy');
 
     Route::get('/manager/members', [ManagerController::class, 'indexMembers'])->name('manager.members.index');
+
+    Route::get('/manager/tickets', [ManagerController::class, 'indexTickets'])->name('manager.tickets.index');
+    Route::get('/manager/tickets/{ticket}', [ManagerController::class, 'showTicket'])->name('manager.tickets.show');
+    Route::post('/manager/tickets/{ticket}/reply', [ManagerController::class, 'storeTicketReply'])->name('manager.tickets.reply.store');
+    Route::put('/manager/tickets/{ticket}/resolve', [ManagerController::class, 'resolveTicket'])->name('manager.tickets.resolve');
 });
 
 Route::get('/dashboard/member/gym-search', [GymSearchController::class, 'index'])->name('gym.search');
