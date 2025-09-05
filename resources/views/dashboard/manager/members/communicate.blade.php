@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="content">
-        <h1>Comunicar com Membros</h1>
+        <h1>Comunicar com Alunos</h1>
 
         @if (session('success'))
             <div class="alert alert-success">

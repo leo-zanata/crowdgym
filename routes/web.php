@@ -70,6 +70,11 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/manager/tickets/{ticket}', [ManagerController::class, 'showTicket'])->name('manager.tickets.show');
     Route::post('/manager/tickets/{ticket}/reply', [ManagerController::class, 'storeTicketReply'])->name('manager.tickets.reply.store');
     Route::put('/manager/tickets/{ticket}/resolve', [ManagerController::class, 'resolveTicket'])->name('manager.tickets.resolve');
+
+    Route::get('/manager/employees', [ManagerController::class, 'indexEmployees'])->name('manager.employees.index');
+    Route::get('/manager/employees/{employee}/edit', [ManagerController::class, 'editEmployees'])->name('manager.employees.edit');
+    Route::put('/manager/employees/{employee}', [ManagerController::class, 'updateEmployees'])->name('manager.employees.update');
+    Route::delete('/manager/employees/{employee}', [ManagerController::class, 'destroyEmployees'])->name('manager.employees.destroy');
 });
 
 Route::get('/dashboard/member/gym-search', [GymSearchController::class, 'index'])->name('gym.search');

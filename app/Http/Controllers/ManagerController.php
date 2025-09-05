@@ -138,6 +138,86 @@ class ManagerController extends Controller
         return redirect()->back()->with('success', 'Funcionário cadastrado com sucesso!');
     }
 
+    public function indexEmployees()
+    {
+        $manager = Auth::user();
+        if (!$manager) {
+            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar esta página.');
+        }
+
+        $employees = User::where('gym_id', $manager->gym_id)
+            ->where('type', 'employee')
+            ->get();
+
+        return view('dashboard.manager.employees.index', compact('employees'));
+    }
+
+    public function editEmployees(User $employee)
+    {
+        $manager = Auth::user();
+        if (!$manager) {
+            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar esta página.');
+        }
+
+        if ($employee->gym_id !== $manager->gym_id) {
+            return redirect()->route('manager.employees.index')->with('error', 'Você não tem permissão para editar este funcionário.');
+        }
+
+        return view('dashboard.manager.employees.edit', compact('employee'));
+    }
+
+    public function updateEmployees(Request $request, User $employee)
+    {
+        $manager = Auth::user();
+        if (!$manager) {
+            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar esta página.');
+        }
+
+        if ($employee->gym_id !== $manager->gym_id) {
+            return redirect()->route('manager.employees.index')->with('error', 'Você não tem permissão para editar este funcionário.');
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($employee->id)],
+            'password' => 'nullable|string|min:8|confirmed',
+            'cpf' => ['required', 'string', 'max:14', Rule::unique('users')->ignore($employee->id)],
+            'birth' => 'required|date',
+            'gender' => ['required', Rule::in(['masculino', 'feminino', 'outro'])],
+        ]);
+
+        $employee->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'cpf' => $request->cpf,
+            'birth' => $request->birth,
+            'gender' => $request->gender,
+        ]);
+
+        if ($request->filled('password')) {
+            $employee->password = Hash::make($request->password);
+            $employee->save();
+        }
+
+        return redirect()->route('manager.employees.index')->with('success', 'Funcionário atualizado com sucesso!');
+    }
+
+    public function destroyEmployees(User $employee)
+    {
+        $manager = Auth::user();
+        if (!$manager) {
+            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar esta página.');
+        }
+
+        if ($employee->gym_id !== $manager->gym_id) {
+            return redirect()->route('manager.employees.index')->with('error', 'Você não tem permissão para remover este funcionário.');
+        }
+
+        $employee->delete();
+
+        return redirect()->route('manager.employees.index')->with('success', 'Funcionário removido com sucesso!');
+    }
+
     public function showCommunicationForm()
     {
         return view('dashboard.manager.members.communicate');

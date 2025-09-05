@@ -115,11 +115,7 @@
                 </a>
                 <a href="{{ route('manager.members.communicate') }}" class="action-button">
                     <i class="bi bi-person-lines-fill"></i>
-                    Comunicar com Membros
-                </a>
-                <a href="#" class="action-button">
-                    <i class="bi bi-ticket-detailed"></i>
-                    Tickets de Suporte
+                    Comunicar com Alunos
                 </a>
             </div>
         </section>
