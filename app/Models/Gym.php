@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Gym extends Model
 {
@@ -28,4 +30,14 @@ class Gym extends Model
         'week_day',
         'status',
     ];
+
+    public function manager(): HasOne
+    {
+        return $this->hasOne(User::class, 'gym_id')->where('type', 'manager');
+    }
+
+    public function members(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'gym_user', 'gym_id', 'user_id')->where('type', 'member');
+    }
 }

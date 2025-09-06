@@ -21,15 +21,16 @@ class PasswordResetController extends Controller
 
     public function sendResetLinkEmail(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'email' => 'required|email|exists:users,email',
         ], [
             'email.exists' => 'O e-mail informado não está cadastrado em nossa base de dados.',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $validated['email'])->first();
+        /** @var \App\Models\User $user */
 
-        PasswordReset::where('email', $request->email)->delete();
+        PasswordReset::where('email', $validated['email'])->delete();
 
         $code = strval(random_int(1000, 9999));
 
@@ -95,7 +96,7 @@ class PasswordResetController extends Controller
 
     public function resetPassword(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'email' => 'required|email',
             'token' => 'required|string',
             'password' => 'required|string|min:8|confirmed',
@@ -105,20 +106,21 @@ class PasswordResetController extends Controller
             'password.confirmed' => 'As senhas não coincidem.',
         ]);
 
-        $passwordReset = PasswordReset::where('email', $request->email)
-            ->where('token', $request->token)
+        $passwordReset = PasswordReset::where('email', $validated['email'])
+            ->where('token', $validated['token'])
             ->first();
-            
+
         if (!$passwordReset) {
             return back()->withErrors(['email' => 'Token de redefinição inválido ou expirado.']);
         }
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $validated['email'])->first();
         if (!$user) {
             return back()->withErrors(['email' => 'Usuário não encontrado.']);
         }
 
-        $user->password = Hash::make($request->password);
+        /** @var \App\Models\User $user */
+        $user->password = Hash::make($validated['password']);
         $user->save();
         $passwordReset->delete();
 

@@ -1,15 +1,13 @@
 @extends('layouts.dashboard')
 
-@section('title')
-    Ticket de Suporte #{{ $ticket?->id ?? '' }}
-@endsection
+@section('title', 'Ticket de Suporte #' . ($ticket?->id ?? ''))
 
 @section('content')
     <div class="container mx-auto px-4 py-8 max-w-2xl">
         <div class="bg-white rounded-lg shadow-xl p-8 mb-6">
             <div class="flex justify-between items-center mb-4">
-                <h1 class="text-3xl font-bold text-gray-800">Ticket #{{ $ticket?->id ?? ''}}</h1>
-                <a href="{{ route('manager.tickets.index') }}"
+                <h1 class="text-3xl font-bold text-gray-800">Ticket #{{ $ticket?->id }}</h1>
+                <a href="{{ route('admin.tickets.index') }}"
                     class="text-blue-600 hover:text-blue-800 transition duration-150 ease-in-out">
                     &larr; Voltar para a lista
                 </a>
@@ -27,8 +25,8 @@
                         <p class="text-sm text-gray-500">{{ $ticket->created_at?->format('d/m/Y H:i') ?? '' }}</p>
                     </div>
                 </div>
-                <h2 class="text-xl font-semibold text-gray-800 mt-4">{{ $ticket?->subject ?? '' }}</h2>
-                <p class="text-gray-600 mt-2">{{ $ticket?->message ?? '' }}</p>
+                <h2 class="text-xl font-semibold text-gray-800 mt-4">{{ $ticket?->subject }}</h2>
+                <p class="text-gray-600 mt-2">{{ $ticket?->message }}</p>
             </div>
 
             @if (session('success'))
@@ -44,7 +42,7 @@
                         class="p-4 rounded-lg {{ $reply->user_id === Auth::id() ? 'bg-indigo-100 text-indigo-900' : 'bg-gray-200 text-gray-800' }}">
                         <p class="font-semibold">{{ $reply->user?->name ?? 'Usuário Desconhecido' }}</p>
                         <p class="text-sm text-gray-600">{{ $reply->created_at?->format('d/m/Y H:i') ?? '' }}</p>
-                        <p class="mt-2">{{ $reply->message ?? '' }}</p>
+                        <p class="mt-2">{{ $reply->message }}</p>
                     </div>
                 @empty
                     <p class="text-center text-gray-500">Nenhuma resposta ainda. Seja o primeiro a responder!</p>
@@ -53,7 +51,7 @@
 
             @if ($ticket?->status !== 'resolved')
                 <div class="mt-4">
-                    <form action="{{ route('manager.tickets.reply.store', $ticket) }}" method="POST" class="mb-4">
+                    <form action="{{ route('admin.tickets.reply.store', $ticket) }}" method="POST" class="mb-4">
                         @csrf
                         <div>
                             <label for="message" class="block text-sm font-medium text-gray-700">Sua Resposta</label>
@@ -71,7 +69,7 @@
                         </div>
                     </form>
 
-                    <form action="{{ route('manager.tickets.resolve', $ticket) }}" method="POST">
+                    <form action="{{ route('admin.tickets.resolve', $ticket) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <button type="submit"
@@ -80,7 +78,6 @@
                         </button>
                     </form>
                 </div>
-
             @else
                 <div class="mt-4 p-4 rounded-lg bg-green-100 text-green-800 text-center font-semibold">
                     Este ticket já foi resolvido.

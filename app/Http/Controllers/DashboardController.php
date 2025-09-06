@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use App\Models\CheckInOut;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Models\AdminSupportTicket;
 
 class DashboardController extends Controller
 {
@@ -39,6 +40,7 @@ class DashboardController extends Controller
     public function showManagerDashboard()
     {
         $manager = Auth::user();
+        /** @var \App\Models\User $manager */
         
         if (!$manager->gym_id) {
             return redirect()->route('home')->with('error', 'Sua conta não está associada a uma academia.');
@@ -160,8 +162,7 @@ class DashboardController extends Controller
     public function showAdminDashboard()
     {
         $pendingGyms = Gym::where('status', 'pending')->get();
-
-        $openTickets = SupportTicket::where('status', 'open')->get();
+        $openTickets = AdminSupportTicket::where('status', 'open')->get();
 
         return view('dashboard.admin', compact('pendingGyms', 'openTickets'));
     }

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminGymController;
 use App\Http\Controllers\AdminManagerController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\PasswordResetController;
 
@@ -37,6 +38,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/manager', [DashboardController::class, 'showManagerDashboard'])->name('dashboard.manager');
     Route::get('/dashboard/member', [DashboardController::class, 'showMemberDashboard'])->name('dashboard.member');
     Route::get('/dashboard/employee', [DashboardController::class, 'showEmployeeDashboard'])->name('dashboard.employee');
+
+    Route::get('/helpcenter', [HelpCenterController::class, 'index'])->name('helpcenter.index');
+    Route::get('/helpcenter/ticket', [HelpCenterController::class, 'showTicketForm'])->name('helpcenter.ticket.create');
+    Route::post('/helpcenter/ticket', [HelpCenterController::class, 'storeTicket'])->name('helpcenter.ticket.store');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -47,6 +52,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/gyms/{gym}/reject', [AdminGymController::class, 'reject'])->name('admin.gyms.reject');
     Route::get('/admin/managers/create', [AdminManagerController::class, 'create'])->name('admin.managers.create');
     Route::post('/admin/managers', [AdminManagerController::class, 'store'])->name('admin.managers.store');
+
+    Route::get('/admin/tickets', [AdminController::class, 'indexTickets'])->name('admin.tickets.index');
+    Route::get('/admin/tickets/{ticket}', [AdminController::class, 'showTicket'])->name('admin.tickets.show');
+    Route::post('/admin/tickets/{ticket}/reply', [AdminController::class, 'storeTicketReply'])->name('admin.tickets.reply.store');
+    Route::put('/admin/tickets/{ticket}/resolve', [AdminController::class, 'resolveTicket'])->name('admin.tickets.resolve');
 });
 
 Route::middleware(['auth', 'role:manager'])->group(function () {
@@ -85,10 +95,6 @@ Route::get('/my-gyms', [MyGymController::class, 'index'])->name('gym.my');
 Route::get('/payment-data', [SubscriptionController::class, 'index'])->name('payment.data');
 
 Route::get('/about', [AboutController::class, 'index'])->name('about');
-
-Route::get('/helpcenter', [HelpCenterController::class, 'index'])->name('helpcenter.index');
-Route::get('/helpcenter/ticket', [HelpCenterController::class, 'showTicketForm'])->name('helpcenter.ticket.create');
-Route::post('/helpcenter/ticket', [HelpCenterController::class, 'storeTicket'])->name('helpcenter.ticket.store');
 
 Route::get('/forgot-password', [PasswordResetController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail'])->name('password.email');

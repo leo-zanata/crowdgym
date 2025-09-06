@@ -3,21 +3,22 @@
 @section('title', 'Dashboard do Administrador')
 
 @section('content')
-    <main>
-        <h1>Bem-vindo, Administrador!</h1>
+<main>
+<h1>Bem-vindo, Administrador!</h1>
 
-        <section class="admin-summary">
-            <div class="summary-card">
-                <h2>Novas Solicitações de Academias</h2>
-                <p>Você tem {{ $pendingGyms->count() }} solicitações pendentes.</p>
-                <a href="{{ route('admin.gyms.pending') }}">Ver Solicitações</a>
-            </div>
+    <section class="admin-summary">
+        <div class="summary-card">
+            <h2>Novas Solicitações de Academias</h2>
+            <p>Você tem {{ $pendingGyms->count() }} solicitações pendentes.</p>
+            <a href="{{ route('admin.gyms.pending') }}">Ver Solicitações</a>
+        </div>
 
-            <div class="summary-card">
-                <h2>Tickets de Suporte Abertos</h2>
-                <p>Você tem {{ $openTickets->count() }} tickets de suporte em aberto.</p>
-                <a href="">Ver Tickets</a>
-            </div>
-        </section>
-    </main>
+        <div class="summary-card">
+            <h2>Tickets de Suporte Abertos</h2>
+            <p>Você tem {{ $openTickets->count() }} tickets de suporte em aberto.</p>
+            <a href="{{ route('admin.tickets.index') }}">Ver Tickets</a>
+        </div>
+    </section>
+</main>
+
 @endsection
