@@ -28,6 +28,10 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 
+Route::get('/email/verify', [AuthController::class, 'showEmailVerificationForm'])->name('verification.notice');
+Route::post('/email/verify', [AuthController::class, 'verifyEmail'])->name('verification.verify');
+Route::post('/email/verify/resend', [AuthController::class, 'resendVerificationCode'])->name('verification.resend');
+
 Route::get('/register-gym', [GymController::class, 'create'])->name('gym.register');
 Route::post('/register-gym', [GymController::class, 'store'])->name('gym.store');
 

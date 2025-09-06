@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Collection;
  * @property string $name
  * @property string $email
  * @property string $password
+ * @property \Illuminate\Support\Carbon|null $email_verified_at
+ * @property string|null $email_verification_code
  * @property string|null $cpf
  * @property \Illuminate\Support\Carbon|null $birth
  * @property string|null $gender

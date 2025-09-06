@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use App\Mail\EmailVerificationMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Carbon;
 
 class AuthController extends Controller
 {
@@ -28,9 +31,13 @@ class AuthController extends Controller
         ];
 
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
             $user = Auth::user();
+
+            if (is_null($user->email_verified_at)) {
+                return redirect()->route('verification.notice');
+            }
+
+            $request->session()->regenerate();
 
             if ($user->type === 'admin') {
                 return redirect()->intended(route('dashboard.admin'));
@@ -67,6 +74,8 @@ class AuthController extends Controller
             'cpf.size' => 'O CPF deve ter exatamente 11 caracteres.',
         ]);
 
+        $code = strval(random_int(1000, 9999));
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -74,11 +83,65 @@ class AuthController extends Controller
             'birth' => $request->birth,
             'gender' => $request->gender,
             'password' => Hash::make($request->password),
+            'email_verification_code' => $code,
         ]);
+
+        Mail::to($user->email)->send(new EmailVerificationMail($code));
 
         Auth::login($user);
 
-        return redirect()->route('dashboard.member');
+        return redirect()->route('verification.notice');
+    }
+
+    public function showEmailVerificationForm(Request $request)
+    {
+        if (Auth::check() && !is_null(Auth::user()->email_verified_at)) {
+            return redirect()->route('dashboard.member');
+        }
+
+        return view('auth.verify-email');
+    }
+
+    public function verifyEmail(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Por favor, faça login para verificar seu e-mail.');
+        }
+
+        $request->validate([
+            'code' => 'required|digits:4',
+        ], [
+            'code.required' => 'O código de 4 dígitos é obrigatório.',
+            'code.digits' => 'O código deve conter 4 dígitos.',
+        ]);
+
+        $user = Auth::user();
+
+        if ($request->code == $user->email_verification_code) {
+            $user->email_verified_at = Carbon::now();
+            $user->save();
+
+            return redirect()->intended(route('dashboard.member'))->with('success', 'E-mail verificado com sucesso!');
+        }
+
+        return back()->withErrors(['code' => 'Código de verificação inválido.']);
+    }
+    
+    public function resendVerificationCode(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Por favor, faça login para reenviar o código.');
+        }
+
+        $user = Auth::user();
+        $code = strval(random_int(1000, 9999));
+
+        $user->email_verification_code = $code;
+        $user->save();
+
+        Mail::to($user->email)->send(new EmailVerificationMail($code));
+
+        return back()->with('success', 'Um novo código de verificação foi enviado para o seu e-mail.');
     }
 
     public function logout(Request $request)
