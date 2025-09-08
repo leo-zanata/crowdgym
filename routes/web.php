@@ -16,10 +16,6 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\PasswordResetController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -89,7 +85,14 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/manager/employees/{employee}/edit', [ManagerController::class, 'editEmployees'])->name('manager.employees.edit');
     Route::put('/manager/employees/{employee}', [ManagerController::class, 'updateEmployees'])->name('manager.employees.update');
     Route::delete('/manager/employees/{employee}', [ManagerController::class, 'destroyEmployees'])->name('manager.employees.destroy');
+
+    Route::get('/manager/gym', [ManagerController::class, 'editGym'])->name('manager.gym.edit');
+    Route::put('/manager/gym', [ManagerController::class, 'updateGym'])->name('manager.gym.update');
 });
+
+Route::get('/gyms', [GymController::class, 'index'])->name('gyms.index');
+Route::get('/gyms/{gym}', [GymController::class, 'show'])->name('gyms.show');
+
 
 Route::get('/dashboard/member/gym-search', [GymSearchController::class, 'index'])->name('gym.search');
 Route::get('/plans/{gym_id}', [GymSearchController::class, 'showPlans'])->name('plans.show');

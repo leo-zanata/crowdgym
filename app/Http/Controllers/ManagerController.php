@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gym;
+use App\Models\OperatingHour;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,7 @@ use Illuminate\Validation\Rule;
 use App\Models\Plan;
 use App\Models\SupportTicket;
 use App\Models\TicketReply;
+use App\Services\LocationService;
 
 class ManagerController extends Controller
 {
@@ -465,5 +467,72 @@ class ManagerController extends Controller
         $ticket->save();
 
         return redirect()->back()->with('success', 'Ticket marcado como resolvido!');
+    }
+
+    public function editGym(LocationService $locationService)
+    {
+        $manager = Auth::user();
+        /** @var \App\Models\User $manager */
+
+        $gym = Gym::with('operatingHours')->findOrFail($manager->gym_id);
+
+        $states = $locationService->getStates();
+
+        return view('dashboard.manager.gym.edit', compact('gym', 'states'));
+    }
+
+    public function updateGym(Request $request)
+    {
+        $manager = Auth::user();
+        /** @var \App\Models\User $manager */
+
+        $gym = Gym::findOrFail($manager->gym_id);
+
+        $validatedData = $request->validate([
+            'gym_name' => 'required|string|max:100',
+            'gym_phone' => 'required|numeric|digits_between:10,11',
+            'zip_code' => 'required|numeric|digits:8',
+            'state' => 'required|string|size:2',
+            'city' => 'required|string|max:100',
+            'street' => 'required|string|max:100',
+            'number' => 'required|numeric',
+            'complement' => 'nullable|string|max:255',
+            'hours' => 'nullable|array',
+            'hours.*.days' => 'required_with:hours|array|min:1',
+            'hours.*.days.*' => 'in:0,1,2,3,4,5,6',
+            'hours.*.opening_time' => 'required_with:hours|date_format:H:i',
+            'hours.*.closing_time' => 'required_with:hours|date_format:H:i|after:hours.*.opening_time',
+        ]);
+
+        $gym->update([
+            'gym_name' => $validatedData['gym_name'],
+            'gym_phone' => $validatedData['gym_phone'],
+            'zip_code' => $validatedData['zip_code'],
+            'state' => $validatedData['state'],
+            'city' => $validatedData['city'],
+            'street' => $validatedData['street'],
+            'number' => $validatedData['number'],
+            'complement' => $validatedData['complement'],
+        ]);
+
+        $gym->operatingHours()->delete();
+
+        if ($request->filled('hours')) {
+            foreach ($request->hours as $hourBlock) {
+                if (empty($hourBlock['days'])) {
+                    continue;
+                }
+                foreach ($hourBlock['days'] as $day) {
+                    OperatingHour::create([
+                        'gym_id' => $gym->id,
+                        'day_of_week' => $day,
+                        'opening_time' => $hourBlock['opening_time'],
+                        'closing_time' => $hourBlock['closing_time'],
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->route('manager.gym.edit')->with('success', 'Informações da academia atualizadas com sucesso!');
     }
 }

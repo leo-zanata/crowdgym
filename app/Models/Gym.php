@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Gym extends Model
 {
@@ -25,9 +26,6 @@ class Gym extends Model
         'street',
         'number',
         'complement',
-        'opening',
-        'closing',
-        'week_day',
         'status',
     ];
 
@@ -39,5 +37,15 @@ class Gym extends Model
     public function members(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'gym_user', 'gym_id', 'user_id')->where('type', 'member');
+    }
+
+    public function operatingHours(): HasMany
+    {
+        return $this->hasMany(OperatingHour::class)->orderBy('day_of_week');
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
     }
 }

@@ -29,7 +29,6 @@
                         <p><strong>Telefone:</strong> {{ $gym->gym_phone }}</p>
                         <p><strong>Endereço:</strong> {{ $gym->street }}, {{ $gym->number }} - {{ $gym->neighborhood }}, {{ $gym->city }} - {{ $gym->state }} (CEP: {{ $gym->zip_code }})</p>
                         <p><strong>Complemento:</strong> {{ $gym->complement ?? 'N/A' }}</p>
-                        <p><strong>Horário de Funcionamento:</strong> {{ $gym->week_day }} das {{ \Carbon\Carbon::parse($gym->opening)->format('H:i') }} às {{ \Carbon\Carbon::parse($gym->closing)->format('H:i') }}</p>
                         
                         <form action="{{ route('admin.gyms.approve', $gym->id) }}" method="POST" style="display:inline;">
                             @csrf

@@ -150,62 +150,6 @@
                 @enderror
             </div>
 
-            <div class="input-box">
-                <label for="opening">Horário de Abertura*</label>
-                <input type="time" id="opening" name="opening" required value="{{ old('opening') }}" />
-                @error('opening')
-                    <span style="color: red;">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <div class="input-box">
-                <label for="closing">Horário de Fechamento*</label>
-                <input type="time" id="closing" name="closing" required value="{{ old('closing') }}" />
-                @error('closing')
-                    <span style="color: red;">{{ $message }}</span>
-                @enderror
-            </div>
-        </div>
-
-        <div class="days-inputs">
-            <div class="days-title">
-                <h6>Dias de Funcionamento*</h6>
-            </div>
-            <div class="days-group">
-                <div class="days-input">
-                    <input type="checkbox" id="monday" name="weekDays[]" value="Segunda" {{ in_array('Segunda', old('weekDays', [])) ? 'checked' : '' }} />
-                    <label for="monday">Segunda</label>
-                </div>
-                <div class="days-input">
-                    <input type="checkbox" id="tuesday" name="weekDays[]" value="Terça" {{ in_array('Terça', old('weekDays', [])) ? 'checked' : '' }} />
-                    <label for="tuesday">Terça</label>
-                </div>
-                <div class="days-input">
-                    <input type="checkbox" id="wednesday" name="weekDays[]" value="Quarta" {{ in_array('Quarta', old('weekDays', [])) ? 'checked' : '' }} />
-                    <label for="wednesday">Quarta</label>
-                </div>
-                <div class="days-input">
-                    <input type="checkbox" id="thursday" name="weekDays[]" value="Quinta" {{ in_array('Quinta', old('weekDays', [])) ? 'checked' : '' }} />
-                    <label for="thursday">Quinta</label>
-                </div>
-                <div class="days-input">
-                    <input type="checkbox" id="friday" name="weekDays[]" value="Sexta" {{ in_array('Sexta', old('weekDays', [])) ? 'checked' : '' }} />
-                    <label for="friday">Sexta</label>
-                </div>
-                <div class="days-input">
-                    <input type="checkbox" id="saturday" name="weekDays[]" value="Sábado" {{ in_array('Sábado', old('weekDays', [])) ? 'checked' : '' }} />
-                    <label for="saturday">Sábado</label>
-                </div>
-                <div class="days-input">
-                    <input type="checkbox" id="sunday" name="weekDays[]" value="Domingo" {{ in_array('Domingo', old('weekDays', [])) ? 'checked' : '' }} />
-                    <label for="sunday">Domingo</label>
-                </div>
-                @error('weekDays')
-                    <span style="color: red;">{{ $message }}</span>
-                @enderror
-            </div>
-        </div>
-
         <div class="register-button">
             <input type="submit" id="enviarFormulario" value="Enviar Formulário">
         </div>

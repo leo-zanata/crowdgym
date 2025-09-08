@@ -12,15 +12,7 @@
             <a href="{{ route('manager.employees.index') }}" class="header-buttons">Funcionários</a>
             <a href="{{ route('manager.members.index') }}" class="header-buttons">Alunos</a>
             <a href="{{ route('manager.plans.index') }}" class="header-buttons">Planos</a>
-
-            <div id="searchBar" class="search-bar">
-                <input type="text" id="searchInput" placeholder="Buscar " autocomplete="off" />
-                <ul id="searchResults" class="search-results"></ul>
-            </div>
-
-            <div id="searchIcon" class="search-icon">
-                <i class="bi bi-search"></i>
-            </div>
+            <a href="{{ route('manager.gym.edit') }}" class="header-buttons">Academia</a>
 
             <div class="buttons-profile">
                 <div id="profileButton" class="profile-button">

@@ -36,8 +36,8 @@
 
                 <div class="input-box">
                     <label for="gymPhone">Telefone da Academia*</label>
-                    <input type="tel" name="gymPhone" maxlength="11" oninput="formatOnlyNumbers(this)" placeholder="Digite o número" id="gymPhone" required
-                        value="{{ old('gymPhone') }}" />
+                    <input type="tel" name="gymPhone" maxlength="11" oninput="formatOnlyNumbers(this)"
+                        placeholder="Digite o número" id="gymPhone" required value="{{ old('gymPhone') }}" />
                     @error('gymPhone')
                         <span style="color: red;">{{ $message }}</span>
                     @enderror
@@ -45,8 +45,8 @@
 
                 <div class="input-box">
                     <label for="managerPhone">Telefone do(a) Gerente*</label>
-                    <input type="tel" name="managerPhone" maxlength="11" oninput="formatOnlyNumbers(this)" placeholder="Digite o número" id="managerPhone"
-                        required value="{{ old('managerPhone') }}" />
+                    <input type="tel" name="managerPhone" maxlength="11" oninput="formatOnlyNumbers(this)"
+                        placeholder="Digite o número" id="managerPhone" required value="{{ old('managerPhone') }}" />
                     @error('managerPhone')
                         <span style="color: red;">{{ $message }}</span>
                     @enderror
@@ -63,8 +63,8 @@
 
                 <div class="input-box">
                     <label for="cpf">CPF*</label>
-                    <input type="text" id="cpf" name="manager_cpf" maxlength="11" oninput="formatOnlyNumbers(this)" placeholder="Digite o cpf" required
-                        value="{{ old('manager_cpf') }}" />
+                    <input type="text" id="cpf" name="manager_cpf" maxlength="11" oninput="formatOnlyNumbers(this)"
+                        placeholder="Digite o cpf" required value="{{ old('manager_cpf') }}" />
                     @error('manager_cpf')
                         <span style="color: red;">{{ $message }}</span>
                     @enderror
@@ -72,8 +72,8 @@
 
                 <div class="input-box" id="cep-box">
                     <label for="zipCode">CEP*</label>
-                    <input type="text" id="zipCode" name="zipCode" oninput="formatOnlyNumbers(this)" maxlength="8" placeholder="Digite o cep" required
-                        value="{{ old('zipCode') }}" />
+                    <input type="text" id="zipCode" name="zipCode" oninput="formatOnlyNumbers(this)" maxlength="8"
+                        placeholder="Digite o cep" required value="{{ old('zipCode') }}" />
                     @error('zipCode')
                         <span style="color: red;">{{ $message }}</span>
                     @enderror
@@ -119,7 +119,8 @@
 
                 <div class="input-box">
                     <label for="number">Número*</label>
-                    <input type="text" name="number" id="number" oninput="formatOnlyNumbers(this)" required value="{{ old('number') }}">
+                    <input type="text" name="number" id="number" oninput="formatOnlyNumbers(this)" required
+                        value="{{ old('number') }}">
                     @error('number') <span class="text-red-500">{{ $message }}</span> @enderror
                 </div>
 
@@ -127,57 +128,6 @@
                     <label for="complement">Complemento</label>
                     <input type="text" name="complement" id="complement" value="{{ old('complement') }}">
                     @error('complement') <span class="text-red-500">{{ $message }}</span> @enderror
-                </div>
-
-                <div class="input-box">
-                    <label for="opening">Horário de Abertura*</label>
-                    <input type="time" name="opening" id="opening" required value="{{ old('opening') }}">
-                    @error('opening') <span class="text-red-500">{{ $message }}</span> @enderror
-                </div>
-
-                <div class="input-box">
-                    <label for="closing">Horário de Fechamento*</label>
-                    <input type="time" name="closing" id="closing" required value="{{ old('closing') }}">
-                    @error('closing') <span class="text-red-500">{{ $message }}</span> @enderror
-                </div>
-
-                <div class="days-inputs">
-                    <div class="days-title">
-                        <h6>Dias de Funcionamento*</h6>
-                    </div>
-                    <div class="days-group">
-                        <div class="days-input">
-                            <input type="checkbox" id="monday" name="weekDays[]" value="Segunda" {{ in_array('Segunda', old('weekDays', [])) ? 'checked' : '' }} />
-                            <label for="monday">Segunda</label>
-                        </div>
-                        <div class="days-input">
-                            <input type="checkbox" id="tuesday" name="weekDays[]" value="Terça" {{ in_array('Terça', old('weekDays', [])) ? 'checked' : '' }} />
-                            <label for="tuesday">Terça</label>
-                        </div>
-                        <div class="days-input">
-                            <input type="checkbox" id="wednesday" name="weekDays[]" value="Quarta" {{ in_array('Quarta', old('weekDays', [])) ? 'checked' : '' }} />
-                            <label for="wednesday">Quarta</label>
-                        </div>
-                        <div class="days-input">
-                            <input type="checkbox" id="thursday" name="weekDays[]" value="Quinta" {{ in_array('Quinta', old('weekDays', [])) ? 'checked' : '' }} />
-                            <label for="thursday">Quinta</label>
-                        </div>
-                        <div class="days-input">
-                            <input type="checkbox" id="friday" name="weekDays[]" value="Sexta" {{ in_array('Sexta', old('weekDays', [])) ? 'checked' : '' }} />
-                            <label for="friday">Sexta</label>
-                        </div>
-                        <div class="days-input">
-                            <input type="checkbox" id="saturday" name="weekDays[]" value="Sábado" {{ in_array('Sábado', old('weekDays', [])) ? 'checked' : '' }} />
-                            <label for="saturday">Sábado</label>
-                        </div>
-                        <div class="days-input">
-                            <input type="checkbox" id="sunday" name="weekDays[]" value="Domingo" {{ in_array('Domingo', old('weekDays', [])) ? 'checked' : '' }} />
-                            <label for="sunday">Domingo</label>
-                        </div>
-                        @error('weekDays')
-                            <span style="color: red;">{{ $message }}</span>
-                        @enderror
-                    </div>
                 </div>
             </div>
 

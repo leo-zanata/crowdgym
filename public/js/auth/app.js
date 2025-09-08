@@ -1,5 +1,3 @@
-// public/js/app.js
-
 document.addEventListener('DOMContentLoaded', function () {
     const stateSelect = document.getElementById('state');
     const citySelect = document.getElementById('city');

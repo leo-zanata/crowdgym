@@ -7,7 +7,7 @@
         </div>
 
         <nav class="nav-buttons">
-            <a href="" class="header-buttons">Academias Parceiras</a>
+            <a href="{{ route('gyms.index') }}" class="header-buttons">Academias Parceiras</a>
             <a href="{{ route('gym.register') }}" class="header-buttons">Seja um parceiro</a>
             @auth
                 @if (Auth::user()->type === 'admin')
