@@ -15,6 +15,7 @@ use App\Http\Controllers\AdminManagerController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\Admin\AdminUserController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -57,6 +58,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/tickets/{ticket}', [AdminController::class, 'showTicket'])->name('admin.tickets.show');
     Route::post('/admin/tickets/{ticket}/reply', [AdminController::class, 'storeTicketReply'])->name('admin.tickets.reply.store');
     Route::put('/admin/tickets/{ticket}/resolve', [AdminController::class, 'resolveTicket'])->name('admin.tickets.resolve');
+
+    Route::get('/admin/gyms', [AdminGymController::class, 'index'])->name('admin.gyms.index');
+    Route::get('/admin/gyms/{gym}/edit', [AdminGymController::class, 'edit'])->name('admin.gyms.edit');
+    Route::put('/admin/gyms/{gym}', [AdminGymController::class, 'update'])->name('admin.gyms.update');
+    Route::delete('/admin/gyms/{gym}', [AdminGymController::class, 'destroy'])->name('admin.gyms.destroy');
+
+    Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+    Route::get('/admin/users/{user}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/admin/users/{user}', [AdminUserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/admin/users/{user}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
 });
 
 Route::middleware(['auth', 'role:manager'])->group(function () {

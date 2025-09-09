@@ -12,6 +12,46 @@ use App\Services\LocationService;
 
 class AdminGymController extends Controller
 {
+    public function index(Request $request)
+    {
+        $query = Gym::query();
+
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('gym_name', 'like', "%{$searchTerm}%")
+                  ->orWhere('city', 'like', "%{$searchTerm}%");
+        }
+
+        $gyms = $query->latest()->paginate(15);
+
+        return view('dashboard.admin.gyms.index', compact('gyms'));
+    }
+
+    public function edit(Gym $gym)
+    {
+        return view('dashboard.admin.gyms.edit', compact('gym'));
+    }
+
+    public function update(Request $request, Gym $gym)
+    {
+        $validatedData = $request->validate([
+            'gym_name' => 'required|string|max:100',
+            'city' => 'required|string|max:100',
+            'state' => 'required|string|size:2',
+            'status' => ['required', Rule::in(['pending', 'approved', 'rejected'])],
+        ]);
+
+        $gym->update($validatedData);
+
+        return redirect()->route('admin.gyms.index')->with('success', 'Academia atualizada com sucesso!');
+    }
+
+    public function destroy(Gym $gym)
+    {
+        $gym->delete();
+        return redirect()->route('admin.gyms.index')->with('success', 'Academia removida com sucesso!');
+    }
+
     public function create(LocationService $locationService)
     {
         $states = $locationService->getStates();
