@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="UTF-8">
@@ -15,6 +15,9 @@
     <link rel="stylesheet"
         href="https://cdn.positus.global/production/resources/robbu/whatsapp-button/whatsapp-button.css">
     @yield('links')
+    <script src="//unpkg.com/alpinejs" defer></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 
 <body>
@@ -36,6 +39,7 @@
     @yield('js-files')
 
     <script src="{{ asset('js/index.js') }}"></script>
+    @livewireScripts
 </body>
 
 </html>
