@@ -15,6 +15,7 @@
     <link rel="stylesheet"
         href="https://cdn.positus.global/production/resources/robbu/whatsapp-button/whatsapp-button.css">
     @yield('links')
+    <script src="//unpkg.com/alpinejs" defer></script>
 </head>
 
 <body>

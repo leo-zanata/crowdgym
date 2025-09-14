@@ -84,8 +84,8 @@
 
             <div class="input-box" id="cep-box">
                 <label for="zipCode">CEP*</label>
-                <input type="text" id="zipCode" name="zipCode" oninput="formatOnlyNumbers(this)" maxlength="8" placeholder="Digite o cep" required
-                    value="{{ old('zipCode') }}" />
+                <input type="text" id="zipCode" name="zipCode" oninput="formatOnlyNumbers(this)" maxlength="8"
+                    placeholder="Digite o cep" required value="{{ old('zipCode') }}" />
                 @error('zipCode')
                     <span style="color: red;">{{ $message }}</span>
                 @enderror
@@ -134,8 +134,8 @@
 
             <div class="input-box">
                 <label for="number">Numero*</label>
-                <input type="number" name="number" oninput="formatOnlyNumbers(this)" placeholder="Digite o numero" maxlength="10" id="number" required
-                    value="{{ old('number') }}" />
+                <input type="number" name="number" oninput="formatOnlyNumbers(this)" placeholder="Digite o numero"
+                    maxlength="10" id="number" required value="{{ old('number') }}" />
                 @error('number')
                     <span style="color: red;">{{ $message }}</span>
                 @enderror
@@ -150,9 +150,9 @@
                 @enderror
             </div>
 
-        <div class="register-button">
-            <input type="submit" id="enviarFormulario" value="Enviar Formulário">
-        </div>
+            <div class="register-button">
+                <input type="submit" id="enviarFormulario" value="Enviar Formulário">
+            </div>
     </form>
 @endsection
 @section('js-files')

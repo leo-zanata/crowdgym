@@ -48,4 +48,9 @@ class Gym extends Model
     {
         return $query->where('status', 'pending');
     }
+
+    public function plans(): HasMany
+    {
+        return $this->hasMany(Plan::class);
+    }
 }

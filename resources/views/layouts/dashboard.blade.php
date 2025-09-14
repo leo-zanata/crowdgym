@@ -15,6 +15,9 @@
     <link rel="icon" href="{{ asset('img/favicon.png') }}" type="image/png" sizes="32x32" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     @yield('links')
+    <script src="//unpkg.com/alpinejs" defer></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 
 <body>
@@ -41,6 +44,7 @@
     @yield('js-files')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ asset('js/index.js') }}"></script>
+    @livewireScripts
 </body>
 
 </html>

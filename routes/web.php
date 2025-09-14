@@ -16,6 +16,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\PlanController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -104,6 +105,7 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
 Route::get('/gyms', [GymController::class, 'index'])->name('gyms.index');
 Route::get('/gyms/{gym}', [GymController::class, 'show'])->name('gyms.show');
 
+Route::get('/plans/{gym}', [PlanController::class, 'index'])->name('plans.index');
 
 Route::get('/dashboard/member/gym-search', [GymSearchController::class, 'index'])->name('gym.search');
 Route::get('/plans/{gym_id}', [GymSearchController::class, 'showPlans'])->name('plans.show');
