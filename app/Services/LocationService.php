@@ -15,7 +15,7 @@ class LocationService
     {
         return Cache::rememberForever('location.states', function () {
             
-            $path = storage_path('app/data/states_and_cities.json');
+            $path = database_path('data/states_and_cities.json');
 
             if (!File::exists($path)) {
                 return [];
@@ -39,7 +39,7 @@ class LocationService
 
         return Cache::rememberForever($key, function () use ($stateAbbr) {
             
-            $path = storage_path('app/data/states_and_cities.json');
+            $path = database_path('data/states_and_cities.json');
 
             if (!File::exists($path)) {
                 return [];
