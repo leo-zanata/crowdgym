@@ -107,9 +107,6 @@ Route::get('/gyms/{gym}', [GymController::class, 'show'])->name('gyms.show');
 
 Route::get('/plans/{gym}', [PlanController::class, 'index'])->name('plans.index');
 
-Route::get('/dashboard/member/gym-search', [GymSearchController::class, 'index'])->name('gym.search');
-Route::get('/plans/{gym_id}', [GymSearchController::class, 'showPlans'])->name('plans.show');
-
 Route::get('/my-gyms', [MyGymController::class, 'index'])->name('gym.my');
 
 Route::get('/payment-data', [SubscriptionController::class, 'index'])->name('payment.data');

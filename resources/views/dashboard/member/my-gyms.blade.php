@@ -30,6 +30,6 @@
         @else
             <h2>Nenhuma Academia Registrada</h2>
             <p>Você ainda não possui assinaturas de academias no momento.</p>
-            <a href="{{ route('gym.search') }}">Clique aqui para buscar uma academia</a>
+            <a href="{{ route('gyms.index') }}">Clique aqui para buscar uma academia</a>
         @endif
 @endsection
