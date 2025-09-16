@@ -15,7 +15,7 @@ class CityController extends Controller
      * @param LocationService $locationService
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getCitiesByState($state, LocationService $locationService) 
+    public function getCitiesByState($state, LocationService $locationService)
     {
         $cities = $locationService->getCitiesByState($state);
 
@@ -23,6 +23,6 @@ class CityController extends Controller
             return response()->json(['error' => 'State not found.'], 404);
         }
 
-        return response()->json($cities);
+        return response()->json($cities)->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 }
