@@ -33,6 +33,7 @@ class Plan extends Model
      */
     protected $casts = [
         'installment_options' => 'array',
+        'price' => 'decimal:2',
     ];
 
     /**

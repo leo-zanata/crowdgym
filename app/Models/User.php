@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Collection;
  * @property int|null $gym_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $stripe_id
  *
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Gym[] $gyms
  * @property-read \App\Models\Gym|null $associatedGym
@@ -133,5 +134,34 @@ class User extends Authenticatable
     public function supportTickets(): HasMany
     {
         return $this->hasMany(SupportTicket::class);
+    }
+
+    /**
+     * @param int $gymId
+     * @return bool
+     */
+    public function hasActivePrincipalSubscriptionForGym(int $gymId): bool
+    {
+        return $this->subscriptions()
+            ->whereHas('plan', function ($query) use ($gymId) {
+                $query->where('gym_id', $gymId)
+                    ->where('type', 'principal');
+            })
+            ->where('stripe_status', 'active')
+            ->where('ends_at', '>=', now())
+            ->exists();
+    }
+
+    /** 
+     * @param Plan $plan O plano a ser verificado.
+     * @return bool
+     */
+    public function hasActiveSubscriptionForSpecificPlan(Plan $plan): bool
+    {
+        return $this->subscriptions()
+            ->where('plan_id', $plan->id)
+            ->where('stripe_status', 'active')
+            ->where('ends_at', '>=', now())
+            ->exists();
     }
 }
