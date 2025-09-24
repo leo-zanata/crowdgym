@@ -19,7 +19,7 @@
                     @endforeach
                 </ul>
             @else
-                <p>Nenhuma assinatura ativa encontrada. <a href="{{ route('gym.search') }}">Encontre uma academia para se inscrever!</a></p>
+                <p>Nenhuma assinatura ativa encontrada. <a href="{{ route('gyms.index') }}">Encontre uma academia para se inscrever!</a></p>
             @endif
         </section>
 

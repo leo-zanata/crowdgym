@@ -4,7 +4,6 @@ use App\Http\Controllers\HelpCenterController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\MyGymController;
-use App\Http\Controllers\GymSearchController;
 use App\Http\Controllers\GymController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
@@ -17,6 +16,7 @@ use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\CheckoutController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -34,6 +34,13 @@ Route::get('/register-gym', [GymController::class, 'create'])->name('gym.registe
 Route::post('/register-gym', [GymController::class, 'store'])->name('gym.store');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+Route::get('checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
+
+Route::middleware('auth')->group(function () {
+    Route::get('checkout/{plan}', [CheckoutController::class, 'create'])->name('checkout.create');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard/admin', [DashboardController::class, 'showAdminDashboard'])->name('dashboard.admin');

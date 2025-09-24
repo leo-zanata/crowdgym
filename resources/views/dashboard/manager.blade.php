@@ -22,7 +22,8 @@
                     @forelse ($recentEnrollments as $subscription)
                         <li>
                             <p><strong>{{ $subscription->user->name }}</strong> -
-                                {{ $subscription->created_at->format('d/m/Y') }}</p>
+                                {{ $subscription->created_at->format('d/m/Y') }}
+                            </p>
                         </li>
                     @empty
                         <li>
