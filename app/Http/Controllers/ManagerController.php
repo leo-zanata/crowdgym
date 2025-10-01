@@ -18,6 +18,8 @@ use App\Models\Plan;
 use App\Models\SupportTicket;
 use App\Models\TicketReply;
 use App\Services\LocationService;
+use Illuminate\Support\Facades\Log;
+use Stripe\StripeClient;
 
 class ManagerController extends Controller
 {
@@ -284,36 +286,65 @@ class ManagerController extends Controller
 
     public function storePlans(Request $request)
     {
+        /** @var \App\Models\User $manager */
         $manager = Auth::user();
-        if (!$manager) {
-            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar esta página.');
+        if (!$manager || !$manager->gym_id) {
+            return redirect()->route('login')->with('error', 'Acesso inválido.');
         }
 
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
+            'billing_type' => ['required', Rule::in(['recurring', 'one-time'])],
+            'duration_unit' => ['nullable', 'required_if:billing_type,recurring', Rule::in(['day', 'week', 'month', 'year'])],
+            'duration' => 'required|integer|min:1',
             'type' => 'required|in:principal,additional',
-            'duration' => 'required_if:type,principal|integer|min:1',
-            'duration_unit' => ['required_if:type,principal', Rule::in(['day', 'month'])],
             'loyalty_months' => 'nullable|integer|min:0',
             'installment_options' => 'nullable|array',
-            'installment_options.*' => 'integer|min:2|max:12',
+            'installment_options.*' => 'integer|min:1|max:12',
         ]);
 
-        Plan::create([
-            'name' => $request->name,
-            'price' => $request->price,
-            'description' => $request->description,
-            'duration' => $request->duration,
-            'duration_unit' => $request->duration_unit,
-            'loyalty_months' => $request->loyalty_months,
-            'installment_options' => $request->installment_options,
-            'type' => $request->type,
-            'gym_id' => $manager->gym_id,
-        ]);
+        $stripe = new StripeClient(env('STRIPE_SECRET'));
 
-        return redirect()->route('manager.plans.index')->with('success', 'Plano criado com sucesso!');
+        try {
+            $stripeProduct = $stripe->products->create([
+                'name' => $validatedData['name'] . ' (' . $manager->associatedGym->gym_name . ')',
+            ]);
+
+            $priceData = [
+                'product' => $stripeProduct->id,
+                'unit_amount' => $validatedData['price'] * 100,
+                'currency' => 'brl',
+            ];
+
+            if ($validatedData['billing_type'] === 'recurring') {
+                $priceData['recurring'] = ['interval' => $validatedData['duration_unit']];
+            }
+
+            $stripePrice = $stripe->prices->create($priceData);
+
+            Plan::create([
+                'gym_id' => $manager->gym_id,
+                'name' => $validatedData['name'],
+                'description' => $validatedData['description'] ?? null,
+                'price' => $validatedData['price'],
+                'billing_type' => $validatedData['billing_type'],
+                'type' => $validatedData['type'],
+                'duration' => $validatedData['duration'],
+                'duration_unit' => $validatedData['duration_unit'] ?? null,
+                'loyalty_months' => $request->loyalty_months,
+                'installment_options' => $request->installment_options,
+                'stripe_price_id' => $stripePrice->id,
+                'stripe_product_id' => $stripeProduct->id,
+            ]);
+
+            return redirect()->route('manager.plans.index')->with('success', 'Plano criado e sincronizado com a Stripe com sucesso!');
+
+        } catch (\Exception $e) {
+            Log::error("Erro ao criar plano na Stripe: " . $e->getMessage());
+            return back()->withInput()->with('error', 'Não foi possível salvar o plano no sistema de pagamentos.');
+        }
     }
 
     public function editPlans(Plan $plan)
@@ -330,38 +361,64 @@ class ManagerController extends Controller
 
     public function updatePlans(Request $request, Plan $plan)
     {
+        /** @var \App\Models\User $manager */
         $manager = Auth::user();
-        if (!$manager) {
-            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar esta página.');
-        }
-        if ($plan->gym_id !== $manager->gym_id) {
+        if (!$manager || $plan->gym_id !== $manager->gym_id) {
             return redirect()->route('manager.plans.index')->with('error', 'Você não tem permissão para editar este plano.');
         }
 
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
-            'type' => 'required|in:principal,additional',
-            'duration' => 'required_if:type,principal|integer|min:1',
-            'duration_unit' => ['required_if:type,principal', Rule::in(['day', 'month'])],
             'loyalty_months' => 'nullable|integer|min:0',
             'installment_options' => 'nullable|array',
             'installment_options.*' => 'integer|min:1|max:12',
         ]);
 
-        $plan->update([
-            'name' => $request->name,
-            'price' => $request->price,
-            'description' => $request->description,
-            'duration' => $request->duration,
-            'duration_unit' => $request->duration_unit,
-            'loyalty_months' => $request->loyalty_months,
-            'installment_options' => $request->installment_options,
-            'type' => $request->type,
-        ]);
+        $stripe = new StripeClient(env('STRIPE_SECRET'));
 
-        return redirect()->route('manager.plans.index')->with('success', 'Plano atualizado com sucesso!');
+        try {
+            $stripe->products->update($plan->stripe_product_id, [
+                'name' => $validatedData['name'] . ' (' . $manager->associatedGym->gym_name . ')',
+                'description' => $validatedData['description'],
+            ]);
+
+            $newStripePriceId = $plan->stripe_price_id;
+
+            if ((float) $validatedData['price'] !== (float) $plan->price) {
+
+                $stripe->prices->update($plan->stripe_price_id, ['active' => false]);
+
+                $priceData = [
+                    'product' => $plan->stripe_product_id,
+                    'unit_amount' => $validatedData['price'] * 100,
+                    'currency' => 'brl',
+                ];
+
+                if ($plan->billing_type === 'recurring') {
+                    $priceData['recurring'] = ['interval' => $plan->duration_unit];
+                }
+
+                $newStripePrice = $stripe->prices->create($priceData);
+                $newStripePriceId = $newStripePrice->id;
+            }
+
+            $plan->update([
+                'name' => $validatedData['name'],
+                'price' => $validatedData['price'],
+                'description' => $validatedData['description'],
+                'loyalty_months' => $request->loyalty_months,
+                'installment_options' => $request->installment_options,
+                'stripe_price_id' => $newStripePriceId,
+            ]);
+
+            return redirect()->route('manager.plans.index')->with('success', 'Plano atualizado com sucesso!');
+
+        } catch (\Exception $e) {
+            Log::error("Erro ao atualizar o plano na Stripe: " . $e->getMessage());
+            return back()->withInput()->with('error', 'Não foi possível atualizar o plano no sistema de pagamentos.');
+        }
     }
 
     public function destroyPlans(Plan $plan)

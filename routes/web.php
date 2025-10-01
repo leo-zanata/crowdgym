@@ -36,7 +36,7 @@ Route::post('/register-gym', [GymController::class, 'store'])->name('gym.store')
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
-Route::get('checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
+Route::get('checkout/cancel/{gym}', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
 
 Route::middleware('auth')->group(function () {
     Route::get('checkout/{plan}', [CheckoutController::class, 'create'])->name('checkout.create');

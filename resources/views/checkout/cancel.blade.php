@@ -13,12 +13,12 @@
             </div>
             <h2 class="text-3xl font-extrabold text-gray-800 mb-4">Pagamento Cancelado</h2>
             <p class="text-gray-600 text-lg mb-8">
-                A sua transação foi cancelada ou não pôde ser concluída. Nenhum valor foi cobrado. Você pode tentar
-                novamente a qualquer momento.
+                A sua transação foi cancelada ou não pôde ser concluída. Nenhum valor foi cobrado.
             </p>
-            <a href="/"
+
+            <a href="{{ route('plans.index', $gym) }}"
                 class="w-full inline-block bg-gray-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-700 transition-colors shadow-lg">
-                Voltar
+                Voltar aos Planos da Academia
             </a>
         </div>
     </div>

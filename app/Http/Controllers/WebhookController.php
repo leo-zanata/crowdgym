@@ -6,64 +6,115 @@ use App\Models\Subscription;
 use App\Models\User;
 use App\Models\Plan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-use Stripe\Exception\SignatureVerificationException;
-use Stripe\Webhook;
-use UnexpectedValueException;
+use Laravel\Cashier\Http\Controllers\WebhookController as CashierController;
+use Stripe\StripeClient;
+use Symfony\Component\HttpFoundation\Response;
 
-class WebhookController extends Controller
+class WebhookController extends CashierController
 {
-    public function handleWebhook(Request $request)
+    /**
+     *
+     * @param  array  $payload
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function handleCustomerSubscriptionCreated(array $payload)
     {
-        $payload = $request->getContent();
-        $sig_header = $request->server('HTTP_STRIPE_SIGNATURE');
-        $endpoint_secret = env('STRIPE_WEBHOOK_SECRET');
-        $event = null;
-
+        $stripeSubscriptionId = $payload['data']['object']['id'];
         try {
-            $event = Webhook::constructEvent($payload, $sig_header, $endpoint_secret);
-        } catch (\Exception $e) {
-            return response('Webhook Error: ' . $e->getMessage(), 400);
-        }
+            $stripe = new StripeClient(env('STRIPE_SECRET'));
+            $stripeSubscription = $stripe->subscriptions->retrieve($stripeSubscriptionId);
 
-        if ($event->type == 'checkout.session.completed') {
-            $session = $event->data->object;
-
-            Log::info('Webhook checkout.session.completed recebido!', ['session_id' => $session->id]);
-
-            $stripeCustomerId = $session->customer;
-            $planId = $session->metadata->plan_id ?? null;
-
-            Log::info('Dados recebidos:', ['stripe_customer_id' => $stripeCustomerId, 'plan_id' => $planId]);
+            $stripeCustomerId = $stripeSubscription->customer;
+            $stripePriceId = $stripeSubscription->items->data[0]->price->id;
 
             $user = User::where('stripe_id', $stripeCustomerId)->first();
-            $plan = Plan::find($planId);
-
-            if (!$user) {
-                Log::error('Usuário não encontrado com stripe_id:', ['stripe_id' => $stripeCustomerId]);
-            } else {
-                Log::info('Usuário encontrado:', ['user_id' => $user->id, 'email' => $user->email]);
-            }
-
-            if (!$plan) {
-                Log::error('Plano não encontrado com plan_id:', ['plan_id' => $planId]);
-            } else {
-                Log::info('Plano encontrado:', ['plan_name' => $plan->name]);
-            }
+            $plan = Plan::where('stripe_price_id', $stripePriceId)->first();
 
             if ($user && $plan) {
-                Subscription::create([
-                    'user_id' => $user->id,
-                    'plan_id' => $plan->id,
-                    'stripe_session_id' => $session->id,
-                    'stripe_status' => 'active',
-                    'ends_at' => Carbon::now()->add($plan->duration, $plan->duration_unit),
+                if (!Subscription::where('stripe_id', $stripeSubscription->id)->exists()) {
+                    Subscription::create([
+                        'user_id' => $user->id,
+                        'plan_id' => $plan->id,
+                        'stripe_id' => $stripeSubscription->id,
+                        'stripe_status' => $stripeSubscription->status,
+                        'ends_at' => Carbon::createFromTimestamp($stripeSubscription->current_period_end),
+                    ]);
+                    Log::info('Assinatura RECORRENTE criada com sucesso.', ['stripe_subscription_id' => $stripeSubscription->id]);
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error("Erro (subscription.created): " . $e->getMessage(), ['id' => $stripeSubscriptionId]);
+            return $this->errorMethod();
+        }
+        return $this->successMethod();
+    }
+
+    /**
+     *
+     * @param  array  $payload
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function handleCustomerSubscriptionUpdated(array $payload)
+    {
+        $stripeSubscriptionId = $payload['data']['object']['id'];
+
+        try {
+            $stripe = new StripeClient(env('STRIPE_SECRET'));
+            $stripeSubscription = $stripe->subscriptions->retrieve($stripeSubscriptionId);
+            $subscription = Subscription::where('stripe_id', $stripeSubscription->id)->first();
+
+            if ($subscription) {
+                $subscription->update([
+                    'stripe_status' => $stripeSubscription->status,
+                    'ends_at' => Carbon::createFromTimestamp($stripeSubscription->current_period_end),
                 ]);
-                Log::info('Assinatura criada com sucesso!');
+                Log::info('Assinatura customizada atualizada com sucesso.', ['stripe_subscription_id' => $stripeSubscription->id]);
+            }
+        } catch (\Exception $e) {
+            Log::error("Erro ao processar webhook (subscription.updated): " . $e->getMessage(), ['stripe_subscription_id' => $stripeSubscriptionId]);
+            return $this->errorMethod();
+        }
+
+        return $this->successMethod();
+    }
+
+    /**
+     *
+     * @param  array  $payload
+     * @return \Symfony\Component\HttpFoundation\Response // <-- CORREÇÃO: Usando o nome completo e correto
+     */
+    public function handleCheckoutSessionCompleted(array $payload)
+    {
+        $session = $payload['data']['object'];
+
+        if ($session['mode'] === 'payment') {
+            try {
+                $stripeCustomerId = $session['customer'];
+                $planId = $session['metadata']['plan_id'] ?? null;
+
+                $user = User::where('stripe_id', $stripeCustomerId)->first();
+                $plan = Plan::find($planId);
+
+                if ($user && $plan) {
+                    Subscription::create([
+                        'user_id' => $user->id,
+                        'plan_id' => $plan->id,
+                        'stripe_id' => $session['payment_intent'],
+                        'stripe_status' => 'active',
+                        'ends_at' => Carbon::now()->add($plan->duration, $plan->duration_unit),
+                    ]);
+                    Log::info('Assinatura de plano AVULSO criada com sucesso.', ['payment_intent' => $session['payment_intent']]);
+                } else {
+                    Log::error('Usuário ou Plano não encontrado (checkout.session.completed).', ['customer' => $stripeCustomerId, 'plan_id' => $planId]);
+                }
+            } catch (\Exception $e) {
+                Log::error("Erro ao processar webhook (checkout.session.completed): " . $e->getMessage(), ['session_id' => $session['id']]);
+                return $this->errorMethod();
             }
         }
 
-        return response('Webhook Handled', 200);
+        return $this->successMethod();
     }
 }
