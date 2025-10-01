@@ -17,6 +17,7 @@ use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\BillingPortalController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -51,6 +52,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/helpcenter', [HelpCenterController::class, 'index'])->name('helpcenter.index');
     Route::get('/helpcenter/ticket', [HelpCenterController::class, 'showTicketForm'])->name('helpcenter.ticket.create');
     Route::post('/helpcenter/ticket', [HelpCenterController::class, 'storeTicket'])->name('helpcenter.ticket.store');
+
+    Route::get('/billing-portal', [BillingPortalController::class, 'create'])->name('billing.portal');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

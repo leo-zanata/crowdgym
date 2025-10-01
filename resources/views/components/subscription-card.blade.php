@@ -38,7 +38,12 @@
         </dl>
     </div>
 
-    <div class="mt-8 border-t border-gray-200 pt-6">
-        <a href="#" class="text-indigo-600 hover:text-indigo-900 font-medium">Gerenciar Assinatura &rarr;</a>
-    </div>
+    @if ($subscription->plan->billing_type === 'recurring')
+        <div class="mt-8 border-t border-gray-200 pt-6">
+            <a href="{{ route('billing.portal') }}"
+                class="inline-block bg-indigo-600 text-white font-bold py-3 px-5 rounded-lg hover:bg-indigo-700 transition-colors shadow-lg">
+                Gerenciar Assinatura &rarr;
+            </a>
+        </div>
+    @endif
 </div>
