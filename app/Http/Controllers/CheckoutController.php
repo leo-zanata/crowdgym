@@ -35,18 +35,19 @@ class CheckoutController extends Controller
         try {
             $user->createOrGetStripeCustomer();
             $plan->load('gym');
-            
+
             $checkoutOptions = [
+                'payment_method_types' => ['card', 'boleto'],
                 'success_url' => route('checkout.success') . '?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => route('checkout.cancel', ['gym' => $plan->gym]),
-                'metadata' => ['plan_id' => $plan->id]
             ];
 
             if ($plan->billing_type === 'recurring') {
                 $checkoutSession = $user->newSubscription('default', $plan->stripe_price_id)
-                                        ->checkout($checkoutOptions);
-            } 
-            else {
+                    ->withMetadata(['plan_id' => $plan->id])
+                    ->checkout($checkoutOptions);
+            } else {
+                $checkoutOptions['metadata'] = ['plan_id' => $plan->id];
                 $checkoutOptions['line_items'] = [['price' => $plan->stripe_price_id, 'quantity' => 1]];
                 $checkoutOptions['mode'] = 'payment';
                 $checkoutSession = $user->checkout(null, $checkoutOptions);
