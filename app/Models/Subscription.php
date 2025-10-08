@@ -9,6 +9,11 @@ class Subscription extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'user_id',
         'plan_id',
@@ -17,6 +22,11 @@ class Subscription extends Model
         'ends_at',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'ends_at' => 'datetime',
     ];

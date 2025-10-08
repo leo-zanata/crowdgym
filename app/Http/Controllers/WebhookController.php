@@ -83,13 +83,14 @@ class WebhookController extends CashierController
     /**
      *
      * @param  array  $payload
-     * @return \Symfony\Component\HttpFoundation\Response // <-- CORREÇÃO: Usando o nome completo e correto
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function handleCheckoutSessionCompleted(array $payload)
     {
         $session = $payload['data']['object'];
+        Log::info('Evento checkout.session.completed recebido.', ['session_id' => $session['id'], 'mode' => $session['mode']]);
 
-        if ($session['mode'] === 'payment') {
+        if ($session['mode'] === 'payment' && $session['payment_status'] === 'paid') {
             try {
                 $stripeCustomerId = $session['customer'];
                 $planId = $session['metadata']['plan_id'] ?? null;
@@ -105,14 +106,75 @@ class WebhookController extends CashierController
                         'stripe_status' => 'active',
                         'ends_at' => Carbon::now()->add($plan->duration, $plan->duration_unit),
                     ]);
-                    Log::info('Assinatura de plano AVULSO criada com sucesso.', ['payment_intent' => $session['payment_intent']]);
-                } else {
-                    Log::error('Usuário ou Plano não encontrado (checkout.session.completed).', ['customer' => $stripeCustomerId, 'plan_id' => $planId]);
+                    Log::info('Assinatura de plano AVULSO (via cartão) criada com sucesso.', ['payment_intent' => $session['payment_intent']]);
                 }
             } catch (\Exception $e) {
-                Log::error("Erro ao processar webhook (checkout.session.completed): " . $e->getMessage(), ['session_id' => $session['id']]);
+                Log::error("Erro (checkout.session.completed / paid): " . $e->getMessage(), ['session_id' => $session['id']]);
                 return $this->errorMethod();
             }
+        }
+        return $this->successMethod();
+    }
+
+    /**
+     *
+     * @param  array  $payload
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function handleInvoicePaymentSucceeded(array $payload)
+    {
+        $invoice = $payload['data']['object'];
+        $stripeSubscriptionId = $invoice['subscription'] ?? null;
+
+        if ($stripeSubscriptionId) {
+            try {
+                $subscription = Subscription::where('stripe_id', $stripeSubscriptionId)->first();
+                if ($subscription) {
+                    $subscription->update([
+                        'stripe_status' => 'active',
+                        'ends_at' => Carbon::createFromTimestamp($invoice['period_end']),
+                    ]);
+                    Log::info('Assinatura RECORRENTE ativada com sucesso via handleInvoicePaymentSucceeded.', ['id' => $stripeSubscriptionId]);
+                }
+            } catch (\Exception $e) {
+                Log::error("Erro ao processar handleInvoicePaymentSucceeded: " . $e->getMessage(), ['id' => $stripeSubscriptionId]);
+                return $this->errorMethod();
+            }
+        }
+
+        return $this->successMethod();
+    }
+
+    /**
+     *
+     * @param array $payload
+     * @return Response
+     */
+    public function handleCheckoutSessionAsyncPaymentSucceeded(array $payload)
+    {
+        $session = $payload['data']['object'];
+        Log::info('Evento checkout.session.async_payment_succeeded recebido.', ['session_id' => $session['id']]);
+
+        try {
+            $stripeCustomerId = $session['customer'];
+            $planId = $session['metadata']['plan_id'] ?? null;
+
+            $user = User::where('stripe_id', $stripeCustomerId)->first();
+            $plan = Plan::find($planId);
+
+            if ($user && $plan) {
+                Subscription::create([
+                    'user_id' => $user->id,
+                    'plan_id' => $plan->id,
+                    'stripe_id' => $session['payment_intent'],
+                    'stripe_status' => 'active',
+                    'ends_at' => Carbon::now()->add($plan->duration, $plan->duration_unit),
+                ]);
+                Log::info('Assinatura de plano AVULSO (via boleto/pix) criada com sucesso.', ['payment_intent' => $session['payment_intent']]);
+            }
+        } catch (\Exception $e) {
+            Log::error("Erro (async_payment_succeeded): " . $e->getMessage(), ['session_id' => $session['id']]);
+            return $this->errorMethod();
         }
 
         return $this->successMethod();
