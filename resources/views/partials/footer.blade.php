@@ -1,4 +1,43 @@
 <footer>
+    <div class="footer-container">
+
+      <!-- Logo e redes sociais -->
+      <div class="footer-left">
+        <div class="logo">
+          <img src="{{ asset('img/favicon.png') }}" alt="Logo da Crowd Gym" />
+          <h2>Crowd Gym</h2>
+        </div>
+
+        <div class="social-icons">
+          <a><i class="fa-brands fa-instagram"></i></a>
+          <a><i class="fa-brands fa-facebook-f"></i></a>
+          <a><i class="fa-brands fa-x-twitter"></i></a>
+          <a><i class="fa-brands fa-youtube"></i></a>
+          <a><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+
+      <!-- Links -->
+      <div class="footer-links">
+        <ul>
+          <li><a href="#">Contato</a></li>
+          <li><a href="#">Carreira</a></li>
+          <li><a href="#">Sobre</a></li>
+          <li><a href="#">Central de Ajuda</a></li>
+          <li><a href="#">Corporativo</a></li>
+          <li><a href="#">Quero ser um parceiro</a></li>
+        </ul>
+
+        <ul>
+          <li><a href="#">Privacidade</a></li>
+          <li><a href="#">Termos</a></li>
+          <li><a href="#">Segurança</a></li>
+          <li><a href="#">Política de Cookies</a></li>
+        </ul>
+      </div>
+
+    </div>
+
     <div id="footer_copyright">
         <p>&copy; {{ date('Y') }} Crowd Gym. Todos os direitos reservados.</p>
     </div>
