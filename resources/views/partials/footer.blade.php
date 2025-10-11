@@ -7,14 +7,13 @@
           <img src="{{ asset('img/favicon.png') }}" alt="Logo da Crowd Gym" />
           <h2>Crowd Gym</h2>
         </div>
-
-        <div class="social-icons">
-          <a><i class="fa-brands fa-instagram"></i></a>
-          <a><i class="fa-brands fa-facebook-f"></i></a>
-          <a><i class="fa-brands fa-x-twitter"></i></a>
-          <a><i class="fa-brands fa-youtube"></i></a>
-          <a><i class="fa-brands fa-tiktok"></i></a>
-        </div>
+<div class="social-icons">
+    <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+    <a href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+    <a href="https://twitter.com" target="_blank" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+    <a href="https://youtube.com" target="_blank" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+    <a href="https://tiktok.com" target="_blank" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+</div>
       </div>
 
       <!-- Links -->
